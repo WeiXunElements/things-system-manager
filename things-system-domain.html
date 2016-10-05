@@ -137,6 +137,7 @@
 			total-count="[[itemCount]]"
 			current-page="{{page}}"
 			limit="[[limit]]"
+			row-height="60"
 			fixed-column-count="[[menuInfo.fixed_columns]]"
 			grid-save-action="[[menuInfo.grid_save_url]]"
 			buttons="[[buttons]]">
@@ -295,7 +296,6 @@
 			},
 
 			listeners : {
-				'grid.things-grid-configure': '_domainGridConfigure',
 				'grid.things-grid-configured' : '_domainGridConfigured',
 				'grid.things-grid-handle-addrow': '_onTapAdd',
 				'grid.things-grid-detail-tap': '_onTapDelete',
@@ -312,49 +312,12 @@
 			},
 
 			/**
-			 * status_icon column을 추가하고 styleCallback을 설정
-			 */			
-			_domainGridConfigure: function(event) {
-				var columns = event.detail.columns;
-				var baseUrl = this.globals.baseUrl;
-
-				var logoCallback = function(column, row) {
-					var brandImg = row.getValue('brand_image');
-					if(brandImg)
-						return baseUrl + '/download/' + row.getValue('brand_image');
-					else
-						return '/images/icon-brand.png';
-				};
-
-				var statusColumn = {
-					name: 'Logo',
-					type: 'calced',
-					width: 60,
-					valueCallback: logoCallback,
-					styles: {
-					},
-					header: {
-						text: 'Logo'
-					},
-					renderer: {
-						type: 'image',
-						imageDisplay: DataLudi.ImageDisplay.NORMAL
-					}
-				};
-
-				columns.unshift(statusColumn);
-			},
-
-			/**
 			 * 그리드 configurateion이 완료 되면
 			 * 그리드의 이미지를 변경함 (default 'detail' 이미지에서 'close_button'으로)
 			 */
 			_domainGridConfigured: function(e) {
 				var imageColumn = e.detail.columns()[0];
 				imageColumn.styles().setIconIndex('close_button.png');
-
-				var gridObj = this.$.grid.getGridObject();
-				gridObj.setDisplayOptions({ rowHeight: 60 });
 			},
 
 			/**
