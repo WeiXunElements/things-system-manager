@@ -1,0 +1,188 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+
+<link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
+<link rel="import" href="../things-ajax/things-ajax.html">
+<link rel="import" href="../things-input-field/things-input-field.html">
+<link rel="import" href="../things-resource-combo/things-code-combo.html">
+<link rel="import" href="../things-tristate-radio/things-tristate-radio.html">
+<link rel="import" href="../things-button/things-button-bar.html">
+
+
+
+<dom-module id="things-system-user-add">
+	<template>
+		<style>
+			:host {
+				display: block;
+				box-sizing: border-box;
+				@apply(--things-default-padding);
+				@apply(--layout-vertical);
+				@apply(--layout-flex);
+			}
+			.container {
+				@apply(--layout-horizontal);
+				@apply(--layout-flex);
+			}
+			.sub-container {
+				@apply(--layout-vertical);
+				@apply(--layout-flex;)
+			}
+			paper-toolbar {
+				background-color:var(--things-white-background-color);
+				height: 50px;
+				@apply(--things-tight-padding);
+			}
+			paper-toolbar::shadow #bottomBar {
+				height: 50px;
+				@apply(--layout-horizontal);
+				@apply(--layout-end-justified);
+				padding: 0 10px;
+			}
+		</style>
+		<things-i18n-msg auto msgid="label.login" msg="{{labelLogin}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.name" msg="{{labelName}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.super_user" msg="{{labelSuperUser}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.operator_flag" msg="{{labelOperatorFlag}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.encrypted_password" msg="{{labelPassword}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.email" msg="{{labelEmail}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.locale" msg="{{labelLocale}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.admin_flag" msg="{{labelAdminFlag}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.active" msg="{{labelActiveFlag}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.timezone" msg="{{labelTimezone}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.confirmed_password" msg="{{labelConfirmPassword}}" hidden></things-i18n-msg>
+
+		<things-ajax
+			id="add-user-ajax"
+			resource-url="users"
+			resource-action="create">
+		</things-ajax>
+
+		<div class="container">
+			<div class="sub-container">
+				<things-input-field label="[[labelLogin]]" value="{{login}}" required auto-validate></things-input-field>
+				<things-input-field label="[[labelName]]" value="{{name}}" required auto-validate></things-input-field>
+				<things-tristate-radio label="[[labelSuperUser]]" value="{{superUser}}"></things-tristate-radio>
+				<things-tristate-radio label="[[labelOperatorFlag]]" value="{{operatorFlag}}"></things-tristate-radio>
+				<things-input-field label="[[labelPassword]]" type="password" value="{{password}}" required auto-validate></things-input-field>
+			</div>
+			<div class="sub-container">
+				<things-input-field label="[[labelEmail]]" value="{{email}}" required auto-validate validator="things-validator-email"></things-input-field>
+				<things-code-combo label="[[labelLocale]]" code-name="LOCALE" label-path="description" value-path="name" value="{{locale}}"></things-code-combo>
+				<things-tristate-radio label="[[labelAdminFlag]]" value="{{adminFlag}}"></things-tristate-radio>
+				<things-tristate-radio label="[[labelActiveFlag]]" value="{{activeFlag}}"></things-tristate-radio>
+				<things-input-field label="[[labelConfirmPassword]]" type="password" value="{{confirmedPassword}}" required auto-validate></things-input-field>
+			</div>
+		</div>
+
+		<paper-toolbar id="toolbar" justify='end'>
+			<div class="bottom">
+				<things-button-bar id="button-group" buttons="[[buttons]]"></things-button-bar>
+			</div>
+		</paper-toolbar>		
+	</template>
+	<script>
+		Polymer({
+			is: 'things-system-user-add',
+
+			behaviors: [
+				Things.MsgBoxBehavior
+			],
+
+			properties: {
+				buttons: {
+					type: Array,
+					value: function() {
+						return [{
+							id: 'add-btn',
+							text: 'add'
+						}]
+					}
+				},
+
+				superUser: {
+					type: Boolean,
+					value: false
+				},
+
+				operatorFlag: {
+					type: Boolean,
+					value: false
+				},
+
+				adminFlag: {
+					type: Boolean,
+					value: false
+				},
+
+				activeFlag: {
+					type: Boolean,
+					value: false
+				}
+			},
+
+			listeners: {
+				'add-btn-tap': 'addBtnTapped',
+				'add-user-ajax.things-ajax-response': 'addUserResponsed'
+			},
+
+			addBtnTapped: function() {
+				if(this.validateForms()) {
+					var addUserAjax = this.$['add-user-ajax'];
+					addUserAjax.body = {
+						login: this.login,
+						encrypted_password: this.password,
+						email: this.email,
+						name: this.name,
+						locale: this.locale,
+						timezone: this.timezone,
+						super_user: this.superUser,
+						admin_flag: this.adminFlag,
+						operator_flag: this.operatorFlag,
+						active_flag: this.activeFlag
+					};
+
+					addUserAjax.generateRequest();
+				}			
+			},
+
+			validateForms: function() {
+				if(this.login && this.name && this.password && this.email && this.locale && this.confirmedPassword && this.password == this.confirmedPassword) {
+					return true;
+				} else {
+					this.openConfirmMsg({
+						title: Things.DataGlobal.t('text.invalid_input'),
+						text: Things.DataGlobal.t('text.info_invalid')
+					});
+
+					return false;
+				}
+			},
+
+			addUserResponsed: function(event) {
+				console.log(event);
+				this.clearValue();
+				// this.fire('things-dialog-close');
+
+        var dialogCloseEvent = new CustomEvent('things-dialog-close');
+        document.dispatchEvent(dialogCloseEvent);
+
+			},
+
+			clearValue: function() {
+				this.login = null;
+				this.password = null;
+				this.confirmedPassword = null;
+				this.email = null;
+				this.name = null;
+				this.locale = null;
+				this.timezone = null;
+				this.superUser = null;
+				this.adminFlag = null;
+				this.operatorFlag = null;
+				this.activeFlag = null;
+			}
+
+		})
+	</script>
+</dom-module>

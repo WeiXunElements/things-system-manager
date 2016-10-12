@@ -1,0 +1,92 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../things-ajax/things-ajax.html">
+<link rel="import" href="../things-form/things-search-form.html">
+<link rel="import" href="../things-grid/things-resource-grid.html">
+
+<dom-module id="things-system-user">
+	<template>
+		<style>
+			:host {
+				display: block;
+				@apply(--layout-vertical);
+				@apply(--layout-flex);
+			}
+			things-resource-grid {
+				@apply(--layout-flex);
+			}		
+		</style>
+
+		<things-ajax 
+			auto
+			id="resource-meta"
+			method="GET"
+			resource-url="[[menuMetaUrl]]"
+			last-response="{{metaData}}">
+		</things-ajax>
+
+		<things-search-form 
+			id="search-form"
+			title="[[menuInfo.title]]"
+			form-fields="[[searchFormFields]]" 
+			select-fields="[[selectFields]]"
+			sort-fields="[[sortFields]]"
+			action-url="[[menuInfo.resource_url]]" 
+			page="{{page}}"
+			limit="[[limit]]"
+			last-response="{{lastResponse}}">
+		</things-search-form>			
+
+		<things-resource-grid 
+			id="grid"
+			config="[[gridConfig]]"
+			model="[[gridModel]]" 
+			columns="[[gridColumns]]"
+			data="[[items]]"
+			total-count="[[itemCount]]"
+			current-page="{{page}}"
+			limit="[[limit]]"
+			fixed-column-count="[[menuInfo.fixed_columns]]"
+			grid-save-action="[[menuInfo.grid_save_url]]"
+			buttons="[[buttons]]">
+		</things-resource-grid>
+
+	</template>
+	<script>
+		Polymer({
+			is: 'things-system-user',
+
+			behaviors: [
+				Things.ResourceMenuContentBehavior
+			],
+
+			properties: {
+			},
+
+			listeners: {
+				'grid.things-grid-handle-addrow': 'addBtnTapped'
+			},
+
+			addBtnTapped: function(event) {
+				event.preventDefault();
+
+				var view = document.createElement('things-system-user-add');
+				view.title = Things.DataGlobal.t('label.add_user');
+
+				var closeCallback = function() {
+
+				};
+
+				var request = {
+					view: view,
+					modal: true,
+					dialogSize: 'medium'
+				};
+
+				this.fire('things-open-custom-size-dialog', request);
+
+				this.refreshData();
+			}
+		})
+	</script>
+</dom-module>
