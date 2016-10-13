@@ -73,19 +73,19 @@
 				var view = document.createElement('things-system-user-add');
 				view.title = Things.DataGlobal.t('label.add_user');
 
+				var me = this;
 				var closeCallback = function() {
-
+					me.refreshData();
 				};
 
 				var request = {
 					view: view,
 					modal: true,
-					dialogSize: 'medium'
+					dialogSize: 'medium',
+					closeCallback: closeCallback
 				};
 
 				this.fire('things-open-custom-size-dialog', request);
-
-				this.refreshData();
 			}
 		})
 	</script>
