@@ -94,8 +94,8 @@
 					type: Array,
 					value: function() {
 						return [{
-							id: 'add-btn',
-							text: 'add'
+							id: 'new-btn',
+							text: 'new'
 						}]
 					}
 				},
@@ -122,7 +122,7 @@
 			},
 
 			listeners: {
-				'add-btn-tap': 'addBtnTapped',
+				'new-btn-tap': 'addBtnTapped',
 				'add-user-ajax.things-ajax-response': 'addUserResponsed'
 			},
 
@@ -160,13 +160,10 @@
 			},
 
 			addUserResponsed: function(event) {
-				console.log(event);
 				this.clearValue();
-				// this.fire('things-dialog-close');
 
         var dialogCloseEvent = new CustomEvent('things-dialog-close');
         document.dispatchEvent(dialogCloseEvent);
-
 			},
 
 			clearValue: function() {
