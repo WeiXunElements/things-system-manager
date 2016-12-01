@@ -8,7 +8,9 @@
 <link rel="import" href="../things-tristate-radio/things-tristate-radio.html">
 <link rel="import" href="../things-button/things-button-bar.html">
 
-
+<!--
+	사용자 추가 팝업 
+-->
 
 <dom-module id="things-system-user-add">
 	<template>
@@ -40,11 +42,12 @@
 				padding: 0 10px;
 			}
 		</style>
+
 		<things-i18n-msg auto msgid="label.login" msg="{{labelLogin}}" hidden></things-i18n-msg>
 		<things-i18n-msg auto msgid="label.name" msg="{{labelName}}" hidden></things-i18n-msg>
 		<things-i18n-msg auto msgid="label.super_user" msg="{{labelSuperUser}}" hidden></things-i18n-msg>
 		<things-i18n-msg auto msgid="label.operator_flag" msg="{{labelOperatorFlag}}" hidden></things-i18n-msg>
-		<things-i18n-msg auto msgid="label.encrypted_password" msg="{{labelPassword}}" hidden></things-i18n-msg>
+		<things-i18n-msg auto msgid="label.password" msg="{{labelPassword}}" hidden></things-i18n-msg>
 		<things-i18n-msg auto msgid="label.email" msg="{{labelEmail}}" hidden></things-i18n-msg>
 		<things-i18n-msg auto msgid="label.locale" msg="{{labelLocale}}" hidden></things-i18n-msg>
 		<things-i18n-msg auto msgid="label.admin_flag" msg="{{labelAdminFlag}}" hidden></things-i18n-msg>
@@ -79,8 +82,9 @@
 			<div class="bottom">
 				<things-button-bar id="button-group" buttons="[[buttons]]"></things-button-bar>
 			</div>
-		</paper-toolbar>		
+		</paper-toolbar>
 	</template>
+
 	<script>
 		Polymer({
 			is: 'things-system-user-add',
@@ -90,13 +94,13 @@
 			],
 
 			properties: {
+				/**
+				 *
+				 */
 				buttons: {
 					type: Array,
 					value: function() {
-						return [{
-							id: 'new-btn',
-							text: 'new'
-						}]
+						return [{ id: 'save-btn', text: 'save' }];
 					}
 				},
 
@@ -122,11 +126,11 @@
 			},
 
 			listeners: {
-				'new-btn-tap': 'addBtnTapped',
+				'save-btn-tap': 'saveBtnTapped',
 				'add-user-ajax.things-ajax-response': 'addUserResponsed'
 			},
 
-			addBtnTapped: function() {
+			saveBtnTapped: function() {
 				if(this.validateForms()) {
 					var addUserAjax = this.$['add-user-ajax'];
 					addUserAjax.body = {
@@ -143,7 +147,7 @@
 					};
 
 					addUserAjax.generateRequest();
-				}			
+				}
 			},
 
 			validateForms: function() {
@@ -161,9 +165,8 @@
 
 			addUserResponsed: function(event) {
 				this.clearValue();
-
-        var dialogCloseEvent = new CustomEvent('things-dialog-close');
-        document.dispatchEvent(dialogCloseEvent);
+				var dialogCloseEvent = new CustomEvent('things-dialog-close');
+				document.dispatchEvent(dialogCloseEvent);
 			},
 
 			clearValue: function() {
@@ -179,7 +182,6 @@
 				this.operatorFlag = null;
 				this.activeFlag = null;
 			}
-
 		})
 	</script>
 </dom-module>

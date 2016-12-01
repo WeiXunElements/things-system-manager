@@ -4,6 +4,9 @@
 <link rel="import" href="../things-form/things-search-form.html">
 <link rel="import" href="../things-grid/things-resource-grid.html">
 
+<!--
+	사용자 관리 
+-->
 <dom-module id="things-system-user">
 	<template>
 		<style>
@@ -14,7 +17,7 @@
 			}
 			things-resource-grid {
 				@apply(--layout-flex);
-			}		
+			}
 		</style>
 
 		<things-ajax 
@@ -35,7 +38,7 @@
 			page="{{page}}"
 			limit="[[limit]]"
 			last-response="{{lastResponse}}">
-		</things-search-form>			
+		</things-search-form>
 
 		<things-resource-grid 
 			id="grid"
@@ -50,8 +53,8 @@
 			grid-save-action="[[menuInfo.grid_save_url]]"
 			buttons="[[buttons]]">
 		</things-resource-grid>
-
 	</template>
+
 	<script>
 		Polymer({
 			is: 'things-system-user',
@@ -59,9 +62,6 @@
 			behaviors: [
 				Things.ResourceMenuContentBehavior
 			],
-
-			properties: {
-			},
 
 			listeners: {
 				'grid.things-grid-handle-addrow': 'addBtnTapped'
@@ -71,7 +71,7 @@
 				event.preventDefault();
 
 				var view = document.createElement('things-system-user-add');
-				view.title = Things.DataGlobal.t('label.add_user');
+				view.title = Things.DataGlobal.t('button.add');
 
 				var me = this;
 				var closeCallback = function() {
@@ -87,6 +87,6 @@
 
 				this.fire('things-open-custom-size-dialog', request);
 			}
-		})
+		});
 	</script>
 </dom-module>
