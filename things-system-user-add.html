@@ -63,18 +63,23 @@
 
 		<div class="container">
 			<div class="sub-container">
-				<things-input-field label="[[labelLogin]]" value="{{login}}" required auto-validate></things-input-field>
-				<things-input-field label="[[labelName]]" value="{{name}}" required auto-validate></things-input-field>
-				<things-tristate-radio label="[[labelSuperUser]]" value="{{superUser}}"></things-tristate-radio>
-				<things-tristate-radio label="[[labelOperatorFlag]]" value="{{operatorFlag}}"></things-tristate-radio>
-				<things-input-field label="[[labelPassword]]" type="password" value="{{password}}" required auto-validate></things-input-field>
+				<things-input-field label="[[labelLogin]]" value="{{login}}" required auto-validate tab-index ='1'>
+				</things-input-field>
+				<things-input-field label="[[labelName]]" value="{{name}}" required auto-validate tab-index ='3'>
+				</things-input-field>
+				<things-tristate-radio label="[[labelSuperUser]]" value="{{superUser}}" tab-index ='5'>
+				</things-tristate-radio>
+				<things-tristate-radio label="[[labelOperatorFlag]]" value="{{operatorFlag}}" tab-index ='7'>
+				</things-tristate-radio>
+				<things-input-field label="[[labelPassword]]" type="password" value="{{password}}" required auto-validate tab-index ='9'>
+				</things-input-field>
 			</div>
 			<div class="sub-container">
-				<things-input-field label="[[labelEmail]]" value="{{email}}" required auto-validate validator="things-validator-email"></things-input-field>
-				<things-code-combo label="[[labelLocale]]" code-name="LOCALE" label-path="description" value-path="name" value="{{locale}}"></things-code-combo>
-				<things-tristate-radio label="[[labelAdminFlag]]" value="{{adminFlag}}"></things-tristate-radio>
-				<things-tristate-radio label="[[labelActiveFlag]]" value="{{activeFlag}}"></things-tristate-radio>
-				<things-input-field label="[[labelConfirmPassword]]" type="password" value="{{confirmedPassword}}" required auto-validate></things-input-field>
+				<things-input-field label="[[labelEmail]]" value="{{email}}" required auto-validate validator="things-validator-email" tab-index ='2'></things-input-field>
+				<things-code-combo label="[[labelLocale]]" code-name="LOCALE" label-path="description" value-path="name" value="{{locale}}" tab-index ='4'></things-code-combo>
+				<things-tristate-radio label="[[labelAdminFlag]]" value="{{adminFlag}}" tab-index ='6'></things-tristate-radio>
+				<things-tristate-radio label="[[labelActiveFlag]]" value="{{activeFlag}}" tab-index ='8'></things-tristate-radio>
+				<things-input-field label="[[labelConfirmPassword]]" type="password" value="{{confirmedPassword}}" required auto-validate tab-index ='10'></things-input-field>
 			</div>
 		</div>
 
