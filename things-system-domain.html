@@ -3,22 +3,23 @@
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-toolbar/paper-toolbar.html">
 
-<link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
 <link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-form/things-search-form.html">
-<link rel="import" href="../things-form/things-form.html">
-<link rel="import" href="../things-grid/things-resource-grid.html">
-<link rel="import" href="../things-input-field/things-input-field.html">
-<link rel="import" href="../things-resource-combo/things-code-combo.html">
 <link rel="import" href="../things-button/things-button.html">
 <link rel="import" href="../things-content/things-resource-menu-content-behavior.html">
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
-<link rel="import" href="../things-id/things-encrypt-behavior.html">
-<link rel="import" href="../things-spinner/things-spinner-behavior.html">
+<link rel="import" href="../things-form/things-search-form.html">
+<link rel="import" href="../things-form/things-form.html">
 <link rel="import" href="../things-global-behavior/things-global-behavior.html">
+<link rel="import" href="../things-grid/things-resource-grid.html">
+<link rel="import" href="../things-id/things-encrypt-behavior.html">
+<link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
+<link rel="import" href="../things-input-field/things-input-field.html">
+<link rel="import" href="../things-meta/things-entity-meta.html">
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
+<link rel="import" href="../things-resource-combo/things-code-combo.html">
+<link rel="import" href="../things-spinner/things-spinner-behavior.html">
 
 <!--
-	도메인 화면 
+	도메인 관리자 용 도메인 관리 화면 
 -->
 
 <dom-module id="things-system-domain">
@@ -29,8 +30,23 @@
 				@apply(--layout-vertical);
 				@apply(--layout-flex);
 			}
+			.subtitle:before {
+				content: '';
+				@apply(--things-subtitle-icon);
+			}
+			.subtitle {
+				@apply(--things-default-padding);
+				padding-bottom:7px;
+				@apply(--things-subtitle);
+			}
 			things-resource-grid {
 				@apply(--layout-flex);
+			}
+			.things-resource-grid-main {
+				@apply(--layout-flex-1);
+			}
+			.things-resource-grid-sub {
+				@apply(--layout-flex-1);
 			}
 			paper-dialog {
 				position: fixed;
@@ -116,6 +132,17 @@
 			resource-url="seeds/export/all">
 		</things-ajax>
 
+		<things-ajax
+			id="domain-app-list-ajax"
+			resource-action="index"
+			resource-url="domain_apps">
+		</things-ajax>
+
+		<things-entity-meta
+			id="domain-app-entity-meta"
+			resource-name="DomainApp">
+		</things-entity-meta>
+
 		<things-search-form 
 			id="search-form"
 			title="[[menuInfo.title]]"
@@ -128,8 +155,11 @@
 			last-response="{{lastResponse}}">
 		</things-search-form>
 
+		<span class="subtitle"><things-i18n-msg msgid="menu.Domain"></things-i18n-msg></span>
+
 		<things-resource-grid 
 			id="grid"
+			class="things-resource-grid-main"
 			config="[[gridConfig]]"
 			model="[[gridModel]]" 
 			columns="[[gridColumns]]"
@@ -141,6 +171,23 @@
 			fixed-column-count="[[menuInfo.fixed_columns]]"
 			grid-save-action="[[menuInfo.grid_save_url]]"
 			buttons="[[buttons]]">
+		</things-resource-grid>
+
+		<span class="subtitle"><things-i18n-msg msgid="menu.DomainApp"></things-i18n-msg></span>
+
+		<things-resource-grid 
+			id="sub-grid"
+			class="things-resource-grid-sub"
+			model="[[domainAppGridModel]]"
+			columns="[[domainAppGridColumns]]"
+			data="[[domainAppItems]]"
+			grid-save-action="domain_apps/update_multiple"
+			buttons="[[domainAppButtons]]"
+			row-height="60"
+			fixed-column-count="0"
+			current-page=1
+			limit=100
+			!enable-detail-column>
 		</things-resource-grid>
 
 		<paper-dialog id="add-dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
@@ -175,6 +222,42 @@
 			
 			properties: {
 				/**
+				 * domain app select fields
+				 */
+				domainAppSelectFields: {
+					type: String,
+					value: 'id,name,description,description,brand_name,brand_image,theme,updated_at,updater'
+				},
+
+				/**
+				 * domain app sort fields
+				 */
+				domainAppSortFields: {
+					type: Array
+				},
+
+				/**
+				 * domain app grid model
+				 */
+				domainAppGridModel: {
+					type: Array
+				},
+
+				/**
+				 * domain app grid columns
+				 */
+				domainAppGridColumns: {
+					type: Array
+				},
+
+				/**
+				 * domain app items
+				 */
+				domainAppItems: {
+					type: Array
+				},
+
+				/**
 				 * delete 버튼 클릭시 초기화 되는 선택한 row의 아이템 id
 				 */
 				selectedId: {
@@ -186,6 +269,25 @@
 				 */
 				selectedName: {
 					type: String
+				},
+
+				/**
+				 * 도메인 앱 버튼 
+				 */
+				domainAppButtons: {
+					type: Array,
+					value: function() {
+						return [ {
+							id: 'add-btn',
+							text: 'add'
+						},{
+							id: 'delete-btn',
+							text: 'delete'
+						},{
+							id: 'save-btn',
+							text: 'save'
+						} ];
+					}
 				},
 
 				/**
@@ -300,7 +402,7 @@
 				'grid.things-grid-handle-addrow': '_onTapAdd',
 				'grid.things-grid-detail-tap': '_onTapDelete',
 				'grid.things-grid-handle-export': '_onTapExport',
-				'form.setup-btn-tap': 'saveDomain',
+				'grid.things-grid-row-data-select': '_onDomainSelected',
 				'validate-domain-trancate.things-ajax-response': '_truncateDomainValid',
 				'validate-domain-setup.things-ajax-response': '_setupDomainValid',
 				'export-domain.things-ajax-response': '_ajaxSuccess',
@@ -308,21 +410,50 @@
 				'truncate-domain.things-ajax-response': '_deleteCompleted',
 				'truncate-domain.things-ajax-error': '_ajaxFailed',
 				'setup-domain.things-ajax-response': '_setupCompleted',
-				'setup-domain.things-ajax-error': '_ajaxFailed'
+				'setup-domain.things-ajax-error': '_ajaxFailed',
+				'domain-app-list-ajax.things-ajax-response' : '_domainAppsCompleted',
+				'domain-app-entity-meta.things-entity-meta-configured': '_domainAppEntityMetaConfigured',
+				'form.setup-btn-tap': 'saveDomain'
 			},
 
 			/**
-			 * 그리드 configurateion이 완료 되면
-			 * 그리드의 이미지를 변경함 (default 'detail' 이미지에서 'close_button'으로)
+			 * 그리드 configurateion이 완료 되면 그리드의 이미지를 변경함. (default 'detail' 이미지에서 'close_button'으로)
+			 *
+			 * @param {Object} e
 			 */
 			_domainGridConfigured: function(e) {
 				var imageColumn = e.detail.columns()[0];
 				imageColumn.styles().setIconIndex('close_button.png');
+				this.$['domain-app-entity-meta'].loadMeta();
 			},
 
 			/**
-			 * 리스트 화면의 add 버튼 클릭시 발생
-			 * 기존의 로직을 override하고 dialog를 open
+			 * Domain App Entity Meta 구성 완료시  
+			 * 
+			 * @param {Object} event Entity Meta 구성 완료 
+			 */
+			_domainAppEntityMetaConfigured: function(event) {
+				var entityMeta = event.target;
+				this.domainAppSelectFields = entityMeta.selectFields;
+				this.domainAppSortFields = entityMeta.sortFields;
+				this.domainAppGridModel = entityMeta.gridModel;
+				this.domainAppGridColumns = entityMeta.gridColumns;
+			},
+
+			/**
+			 * Domain App Entity Meta 구성 완료시  
+			 * 
+			 * @param {Object} event
+			 */
+			_onDomainSelected: function(event) {
+				this.selectedId = event.detail.id;
+				this.$['domain-app-list-ajax'].generateRequest();
+			},
+
+			/**
+			 * 리스트 화면의 add 버튼 클릭시 ... 기존의 로직을 override하고 dialog를 open
+			 *
+			 * @param {Object} event
 			 */
 			_onTapAdd: function(event) {
 				event.preventDefault();
@@ -330,17 +461,16 @@
 			},
 
 			/**
-			 * 리스트 화면의 delete 버튼 클릭시 발생
-			 * 기존의 로직을 override하고 domain 삭제 절차를 진행함
+			 * 리스트 화면의 delete 버튼 클릭시 발생. 기존의 로직을 override하고 domain 삭제 절차를 진행함
+			 *
+			 * @param {Object} event
 			 */
 			_onTapDelete: function(event) {
+				event.preventDefault();
 				this.selectedId = event.detail.id;
 				this.selectedName = event.detail.name;
-
 				var grid = this.$['grid'];
 				var gridObj = grid.getGridDataSet();
-
-				event.preventDefault();
 				var me = this;
 
 				var firstConfirm = {
@@ -372,6 +502,8 @@
 
 			/**
 			 * export 버튼을 눌렀을 때 발생 export-domain ajax를 호출
+			 *
+			 * @param {Object} event
 			 */
 			_onTapExport: function(evnet) {
 				event.preventDefault();
@@ -381,6 +513,9 @@
 
 			/**
 			 * Ajax 호출 전 ...
+			 *
+			 * @param {String} title
+			 * @param {String} text
 			 */
 			_beforeRequestAjax: function(title, text) {
 				this.openConfirmMsg({
@@ -394,21 +529,35 @@
 
 			/**
 			 * ajax 호출이 완료 된 후 발생
+			 *
+			 * @param {Object} e
 			 */
-			_ajaxSuccess: function() {
+			_ajaxSuccess: function(e) {
 				this.openInfoMsg({ title: Things.DataGlobal.t('text.Success to Process') });
 			},
 
 			/**
 			 * ajax 호출이 실패 한 후 발생
+			 *
+			 * @param {Object} e
 			 */
 			_ajaxFailed: function(e) {
 				this.openInfoMsg({ title: Things.DataGlobal.t('text.Fail to Process') });
 			},
 
 			/**
-			 * validate-domain-trancate ajax의 response가 도착하면 발생
-			 * truncate-domain ajax를 호출함
+			 * Domain App이 조회된 이 후 
+			 *
+			 * @param {Object} e
+			 */
+			_domainAppsCompleted: function(event) {
+				this.domainAppItems = event.detail.items;
+			},
+
+			/**
+			 * validate-domain-trancate ajax의 response가 도착하면 발생. truncate-domain ajax를 호출함
+			 *
+			 * @param {Object} e
 			 */
 			_truncateDomainValid: function(e) {
 				var deleteAjax = this.$['truncate-domain'];
@@ -418,10 +567,11 @@
 			},
 
 			/**
-			 * delete ajax의 response가 도착하면 완료되었음을 알림,
-			 * delete된 domain의 id, name을 clear
+			 * delete ajax의 response가 도착하면 완료되었음을 알림. delete된 domain의 id, name을 clear
+			 *
+			 * @param {Object} event
 			 */
-			_deleteCompleted: function() {
+			_deleteCompleted: function(event) {
 				this._ajaxSuccess();
 				this.selectedId = null;
 				this.selectedName = null;
@@ -429,9 +579,8 @@
 			},
 
 			/**
-			 * add-dialog 내부의 save 버튼 클릭시 발생
-			 * add-dialog에 입력 받은 데이터를 바탕으로
-			 * vaidate-domain ajax를 호출 함
+			 * add-dialog 내부의 save 버튼 클릭시 발생.
+			 * add-dialog에 입력 받은 데이터를 바탕으로 vaidate-domain ajax를 호출 함
 			 */
 			saveDomain: function() {
 				var validateAjax = this.$['validate-domain-setup'];
@@ -446,8 +595,7 @@
 			},
 
 			/**
-			 * validate-domain ajax의 response가 도착하면 발생
-			 * 입력 받은 데이터를 바탕으로 도메인 생성을 진행함
+			 * validate-domain ajax의 response가 도착하면 발생. 입력 받은 데이터를 바탕으로 도메인 생성을 진행함
 			 */
 			_setupDomainValid: function() {
 				var setupAjax = this.$['setup-domain'];
@@ -470,14 +618,16 @@
 
 			/**
 			 * 패스워드 확인 
+			 *
+			 * @param {String} pass
+			 * @param {String} confirmPass
 			 */
 			passwordConfirm: function(pass, confirmPass) {
 				return (pass === confirmPass);
 			},
 
 			/**
-			 * 도메인 생성과 삭제 트렌젝션이 완료 되었을 때 발생
-			 * search-form의 조회 버튼 기능 실행
+			 * 도메인 생성과 삭제 트렌젝션이 완료 되었을 때 발생. search-form의 조회 버튼 기능 실행
 			 */
 			refreshGridData: function() {
 				this.$['search-form']._onSearchFormTap();
