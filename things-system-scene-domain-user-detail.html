@@ -8,16 +8,16 @@
 <dom-module id="things-system-scene-doamin-user-detail">
 	<template>
 		<style>
-      :host{
-        display:block;
-        @apply(--layout-vertical);
-      }
-      things-layout-hera {
-        @apply(--layout-flex);
-      }
-      things-resource-grid {
-      	@apply(--layout-flex);
-      }
+			:host{
+				display:block;
+				@apply(--layout-vertical);
+			}
+			things-layout-hera {
+				@apply(--layout-flex);
+			}
+			things-resource-grid {
+				@apply(--layout-flex);
+			}
 		</style>
 
 		<things-ajax
@@ -76,7 +76,7 @@
 				leftContentTitle: {
 					type: String,
 					value: function() {
-						return Things.DataGlobal.t('label.scene_group');
+						return Things.DataGlobal.t('menu.SceneGroup');
 					}
 				},
 
@@ -110,6 +110,8 @@
 						}, {
 							fieldName: 'scene_group_name'
 						}, {
+							fieldName: 'scene_group_desc'
+						}, {
 							fieldName: 'auth'
 						}]
 					}
@@ -134,6 +136,14 @@
 							editable: false,
 							header: {
 								text: Things.DataGlobal.t('label.group')
+							}
+						},{
+							fieldName: 'scene_group_desc',
+							name: 'scene_group_desc',
+							width: 150,
+							editable: false,
+							header: {
+								text: Things.DataGlobal.t('label.description')
 							}
 						}, {
 							fieldName: 'auth',
@@ -240,7 +250,7 @@
 							};
 
 							tempArray.push(tempObj);
-						}	
+						}
 					}
 				}.bind(this));
 
