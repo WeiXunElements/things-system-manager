@@ -112,7 +112,8 @@
 						}, {
 							fieldName: 'scene_group_desc'
 						}, {
-							fieldName: 'auth'
+							fieldName: 'auth',
+							dataType: 'boolean'
 						}]
 					}
 				},
@@ -156,50 +157,77 @@
 							renderer: {
 								type: "check",
 								editable: true,
-								threeStates: false,
-								trueValues: "true",
-								falseValues: "false"
+								threeStates: false
 							},
 							nullable: true
 						}]
 					}
 				},
 
+				/**
+				 * scene, play group 리스트
+				 */
 				groupList: {
 					type: Array,
 					observer: 'groupListChanged'
 				},
 
+				/**
+				 * scene group의 리스트
+				 */
 				sceneGroups: {
 					type: Array,
 					value: []
 				},
 
+				/**
+				 * play group의 리스트
+				 */
 				playGroups: {
 					type: Array,
 					value: []
 				},
 
+				/**
+				 * scene group button setup
+				 */
 				sceneGroupButton: {
 					type: Array,
 					value: function() {
 						return [{
+							id: 'scene-check-btn', text: 'check'
+						}, {
 							id: 'save-btn', text: 'save'
 						}]
 					}
 				},
 
+				/**
+				 * play group button setup
+				 */
 				playGroupButton: {
 					type: Array,
 					value: function() {
 						return [{
+							id: 'play-check-btn', text: 'check'
+						}, {
 							id: 'save-btn', text: 'save'
 						}]
 					}
+				},
+
+				/**
+				 * check all 버튼 클릭시 적용될 값
+				 */
+				checkVal: {
+					type: Boolean,
+					value: true
 				}
 			},
 
 			listeners: {
+				'scene-check-btn-tap': 'checkAllBtnTapped',
+				'play-check-btn-tap': 'checkAllBtnTapped',
 				'scene-group-grid.things-grid-handle-save': 'groupSaveHandeler',
 				'play-group-grid.things-grid-handle-save': 'groupSaveHandeler',
 				'scene-group-ajax.things-ajax-response': 'saveAjaxResponsed'
@@ -234,7 +262,7 @@
 
 				writeData.forEach(function(data) {
 					if(this.checkDataChanged(data)) {
-						if(data.auth == 'true') {
+						if(data.auth === true) {
 							var tempObj = {
 								account_id: this.resourceId,
 								group_type: data.category,
@@ -243,7 +271,7 @@
 							};
 
 							tempArray.push(tempObj);
-						} else if (data.auth == 'false') {
+						} else if (data.auth === false) {
 							var tempObj = {
 								id: data.id,
 								cud_flag_: 'd'
@@ -273,9 +301,9 @@
 				var result = true;
 				this.groupList.forEach(function(item) {
 					if(item.scene_group_id == data.scene_group_id) {
-						if(item.auth == true && data.auth == 'true') {
+						if(item.auth == true && data.auth === true) {
 							result = false;
-						} else if (item.auth == false && data.auth == 'false') {
+						} else if (item.auth == false && data.auth === false) {
 							result = false;
 						}
 					}
@@ -289,6 +317,25 @@
 			 */
 			saveAjaxResponsed: function(event) {
 				this.$['user-groups-ajax'].generateRequest();
+			},
+
+			/**
+			 * play check all button tapped
+			 */
+			checkAllBtnTapped: function(event) {
+				var targetGrid = (event.detail.id.indexOf('scene') == 0) ? this.$['scene-group-grid'] : this.$['play-group-grid'];
+				var grid = targetGrid.getGridObject();
+				var dataSet = targetGrid.getGridDataSet();
+				var currentRows = grid.getRows();
+				
+				currentRows.forEach(function(row) {
+					var rowObject = row.getRowObject();
+					rowObject.auth = this.checkVal;
+          dataSet.updateRow(row.dataIndex(), rowObject, false);
+        }.bind(this));
+
+				this.checkVal = !this.checkVal
+				grid.refreshView();
 			}
 		})
 	</script>
