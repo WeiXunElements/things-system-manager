@@ -9,7 +9,9 @@
 <link rel="import" href="../things-button/things-button-bar.html">
 
 <!--
-	사용자 추가 팝업 
+## things-system-user-add
+
+	사용자 추가 팝업
 -->
 
 <dom-module id="things-system-user-add">
@@ -100,7 +102,9 @@
 
 			properties: {
 				/**
-				 *
+				 *버튼 그룹
+				 *******
+				 *@type {Array}
 				 */
 				buttons: {
 					type: Array,
@@ -108,22 +112,38 @@
 						return [{ id: 'save-btn', text: 'save' }];
 					}
 				},
-
+				/**
+				 *수퍼 유저
+				 *******
+				 *@type {Boolean}
+				 */
 				superUser: {
 					type: Boolean,
 					value: false
 				},
-
+				/**
+				 *오프레이터 flag
+				 *******
+				 *@type {Boolean}
+				 */
 				operatorFlag: {
 					type: Boolean,
 					value: false
 				},
-
+				/**
+				 *admin flag
+				 *******
+				 *@type {Boolean}
+				 */
 				adminFlag: {
 					type: Boolean,
 					value: false
 				},
-
+				/**
+				 *activeflag
+				 *******
+				 *@type {Boolean}
+				 */
 				activeFlag: {
 					type: Boolean,
 					value: false
@@ -134,7 +154,10 @@
 				'save-btn-tap': 'saveBtnTapped',
 				'add-user-ajax.things-ajax-response': 'addUserResponsed'
 			},
-
+			/**
+			 *save button tapped
+			 *******
+			 */
 			saveBtnTapped: function() {
 				if(this.validateForms()) {
 					var addUserAjax = this.$['add-user-ajax'];
@@ -154,7 +177,10 @@
 					addUserAjax.generateRequest();
 				}
 			},
-
+			/**
+			 *validateForms
+			 *******
+			 */
 			validateForms: function() {
 				if(this.login && this.name && this.password && this.email && this.locale && this.confirmedPassword && this.password == this.confirmedPassword) {
 					return true;
@@ -167,13 +193,19 @@
 					return false;
 				}
 			},
-
+			/**
+			 *addUserResponsed
+			 *******
+			 */
 			addUserResponsed: function(event) {
 				this.clearValue();
 				var dialogCloseEvent = new CustomEvent('things-dialog-close');
 				document.dispatchEvent(dialogCloseEvent);
 			},
-
+			/**
+			 *clearValue
+			 *******
+			 */
 			clearValue: function() {
 				this.login = null;
 				this.password = null;

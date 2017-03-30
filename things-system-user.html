@@ -1,11 +1,12 @@
 <link rel="import" href="../polymer/polymer.html">
-
 <link rel="import" href="../things-ajax/things-ajax.html">
 <link rel="import" href="../things-form/things-search-form.html">
 <link rel="import" href="../things-grid/things-resource-grid.html">
 
 <!--
-	사용자 관리 
+## things-system-user
+
+	사용자 관리
 -->
 <dom-module id="things-system-user">
 	<template>
@@ -20,7 +21,7 @@
 			}
 		</style>
 
-		<things-ajax 
+		<things-ajax
 			auto
 			id="resource-meta"
 			method="GET"
@@ -28,22 +29,22 @@
 			last-response="{{metaData}}">
 		</things-ajax>
 
-		<things-search-form 
+		<things-search-form
 			id="search-form"
 			title="[[menuInfo.title]]"
-			form-fields="[[searchFormFields]]" 
+			form-fields="[[searchFormFields]]"
 			select-fields="[[selectFields]]"
 			sort-fields="[[sortFields]]"
-			action-url="[[menuInfo.resource_url]]" 
+			action-url="[[menuInfo.resource_url]]"
 			page="{{page}}"
 			limit="[[limit]]"
 			last-response="{{lastResponse}}">
 		</things-search-form>
 
-		<things-resource-grid 
+		<things-resource-grid
 			id="grid"
 			config="[[gridConfig]]"
-			model="[[gridModel]]" 
+			model="[[gridModel]]"
 			columns="[[gridColumns]]"
 			data="[[items]]"
 			total-count="[[itemCount]]"
@@ -67,6 +68,11 @@
 				'grid.things-grid-handle-addrow': 'addBtnTapped'
 			},
 
+      /**
+       * add Button Tapped
+       * *******
+       * @param {event} event add button 이벤트
+       */
 			addBtnTapped: function(event) {
 				event.preventDefault();
 

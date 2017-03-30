@@ -19,7 +19,8 @@
 <link rel="import" href="../things-spinner/things-spinner-behavior.html">
 
 <!--
-	도메인 관리자 용 도메인 관리 화면 
+## things-system-domain
+	도메인 관리자 용 도메인 관리 화면
 -->
 
 <dom-module id="things-system-domain">
@@ -89,7 +90,7 @@
 			}
 		</style>
 
-		<things-ajax 
+		<things-ajax
 			auto
 			id="resource-meta"
 			method="GET"
@@ -143,13 +144,13 @@
 			resource-name="DomainApp">
 		</things-entity-meta>
 
-		<things-search-form 
+		<things-search-form
 			id="search-form"
 			title="[[menuInfo.title]]"
-			form-fields="[[searchFormFields]]" 
+			form-fields="[[searchFormFields]]"
 			select-fields="[[selectFields]]"
 			sort-fields="[[sortFields]]"
-			action-url="[[menuInfo.resource_url]]" 
+			action-url="[[menuInfo.resource_url]]"
 			page="{{page}}"
 			limit="[[limit]]"
 			last-response="{{lastResponse}}">
@@ -157,11 +158,11 @@
 
 		<span class="subtitle"><things-i18n-msg msgid="label.domain" auto>Domain</things-i18n-msg></span>
 
-		<things-resource-grid 
+		<things-resource-grid
 			id="grid"
 			class="things-resource-grid-main"
 			config="[[gridConfig]]"
-			model="[[gridModel]]" 
+			model="[[gridModel]]"
 			columns="[[gridColumns]]"
 			data="[[items]]"
 			total-count="[[itemCount]]"
@@ -175,7 +176,7 @@
 
 		<span class="subtitle"><things-i18n-msg msgid="label.domain_app" auto>Domain Application</things-i18n-msg></span>
 
-		<things-resource-grid 
+		<things-resource-grid
 			id="sub-grid"
 			class="things-resource-grid-sub"
 			model="[[domainAppGridModel]]"
@@ -219,10 +220,12 @@
 				Things.SpinnerBehavior,
 				Things.GlobalBehavior
 			],
-			
+
 			properties: {
 				/**
 				 * domain app select fields
+				 * *******
+				 * @type {String}
 				 */
 				domainAppSelectFields: {
 					type: String,
@@ -231,6 +234,8 @@
 
 				/**
 				 * domain app sort fields
+				 * *******
+				 * @type {Array}
 				 */
 				domainAppSortFields: {
 					type: Array
@@ -238,6 +243,8 @@
 
 				/**
 				 * domain app grid model
+				 * ********
+				 * @type {Array}
 				 */
 				domainAppGridModel: {
 					type: Array
@@ -245,6 +252,8 @@
 
 				/**
 				 * domain app grid columns
+				 * *******
+				 * @type {Array}
 				 */
 				domainAppGridColumns: {
 					type: Array
@@ -252,6 +261,8 @@
 
 				/**
 				 * domain app items
+				 * *******
+				 * @type {Array}
 				 */
 				domainAppItems: {
 					type: Array
@@ -259,6 +270,8 @@
 
 				/**
 				 * delete 버튼 클릭시 초기화 되는 선택한 row의 아이템 id
+				 * *********
+				 * @type {Number}
 				 */
 				selectedId: {
 					type: Number
@@ -266,13 +279,17 @@
 
 				/**
 				 * delete 버튼 클릭시 초기화 되는 선택한 row의 아이템 name
+				 * ******
+				 * @type {String}
 				 */
 				selectedName: {
 					type: String
 				},
 
 				/**
-				 * 도메인 앱 버튼 
+				 * 도메인 앱 버튼
+				 * ********
+				 * @type {Array}
 				 */
 				domainAppButtons: {
 					type: Array,
@@ -291,7 +308,9 @@
 				},
 
 				/**
-				 * 폼 버튼 
+				 * 폼 버튼
+				 * *******
+				 * @type {Array}
 				 */
 				formButtons: {
 					type: Array,
@@ -305,6 +324,8 @@
 
 				/**
 				 * 폼 필드
+				 * *****
+				 * @type {Array}
 				 */
 				formFields: {
 					type: Array,
@@ -418,7 +439,7 @@
 
 			/**
 			 * 그리드 configurateion이 완료 되면 그리드의 이미지를 변경함. (default 'detail' 이미지에서 'close_button'으로)
-			 *
+			 ******
 			 * @param {Object} e
 			 */
 			_domainGridConfigured: function(e) {
@@ -428,9 +449,9 @@
 			},
 
 			/**
-			 * Domain App Entity Meta 구성 완료시  
-			 * 
-			 * @param {Object} event Entity Meta 구성 완료 
+			 * Domain App Entity Meta 구성 완료시
+			 *
+			 * @param {Object} event Entity Meta 구성 완료
 			 */
 			_domainAppEntityMetaConfigured: function(event) {
 				var entityMeta = event.target;
@@ -441,8 +462,8 @@
 			},
 
 			/**
-			 * Domain App Entity Meta 구성 완료시  
-			 * 
+			 * Domain App Entity Meta 구성 완료시
+			 *
 			 * @param {Object} event
 			 */
 			_onDomainSelected: function(event) {
@@ -546,7 +567,7 @@
 			},
 
 			/**
-			 * Domain App이 조회된 이 후 
+			 * Domain App이 조회된 이 후
 			 *
 			 * @param {Object} e
 			 */
@@ -581,6 +602,7 @@
 			/**
 			 * add-dialog 내부의 save 버튼 클릭시 발생.
 			 * add-dialog에 입력 받은 데이터를 바탕으로 vaidate-domain ajax를 호출 함
+			 * ********
 			 */
 			saveDomain: function() {
 				var validateAjax = this.$['validate-domain-setup'];
@@ -608,7 +630,7 @@
 			},
 
 			/**
-			 * setupAjax의 response를 받으면 셋팅이 완료 되었음을 알리는 메시지 박스 출력 
+			 * setupAjax의 response를 받으면 셋팅이 완료 되었음을 알리는 메시지 박스 출력
 			 */
 			_setupCompleted: function() {
 				this._ajaxSuccess();
@@ -617,8 +639,8 @@
 			},
 
 			/**
-			 * 패스워드 확인 
-			 *
+			 * 패스워드 확인
+			 ********
 			 * @param {String} pass
 			 * @param {String} confirmPass
 			 */
@@ -628,6 +650,7 @@
 
 			/**
 			 * 도메인 생성과 삭제 트렌젝션이 완료 되었을 때 발생. search-form의 조회 버튼 기능 실행
+			 * *******
 			 */
 			refreshGridData: function() {
 				this.$['search-form']._onSearchFormTap();

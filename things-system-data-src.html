@@ -7,7 +7,9 @@
 <link rel="import" href="../things-content/things-resource-menu-content-behavior.html">
 
 <!--
-	데이터소스 정의 화면 
+## things-system-data-src
+
+	데이터소스 정의 화면
 -->
 
 <dom-module id="things-system-data-src">
@@ -18,13 +20,13 @@
 				@apply(--layout-vertical);
 				@apply(--layout-flex);
 			}
-			
+
 			things-resource-grid {
 				@apply(--layout-flex);
 			}
 		</style>
 
-		<things-ajax 
+		<things-ajax
 			auto
 			id="resource-meta"
 			method="GET"
@@ -32,36 +34,36 @@
 			last-response="{{metaData}}">
 		</things-ajax>
 
-		<things-ajax 
+		<things-ajax
 			id="connect-datasource"
 			method="POST"
 			content-type="application/json"
 			resource-url="data_srcs/:id/init_pool">
 		</things-ajax>
 
-		<things-ajax 
+		<things-ajax
 			id="close-datasource"
 			method="POST"
 			content-type="application/json"
 			resource-url="data_srcs/:id/destroy_pool">
 		</things-ajax>
 
-		<things-search-form 
+		<things-search-form
 			id="search-form"
 			title="[[menuInfo.title]]"
-			form-fields="[[searchFormFields]]" 
+			form-fields="[[searchFormFields]]"
 			select-fields="[[selectFields]]"
 			sort-fields="[[sortFields]]"
-			action-url="[[menuInfo.resource_url]]" 
+			action-url="[[menuInfo.resource_url]]"
 			page="{{page}}"
 			limit="[[limit]]"
 			last-response="{{lastResponse}}">
 		</things-search-form>
 
-		<things-resource-grid 
+		<things-resource-grid
 			id="grid"
 			config="[[gridConfig]]"
-			model="[[gridModel]]" 
+			model="[[gridModel]]"
 			columns="[[gridColumns]]"
 			data="[[items]]"
 			total-count="[[itemCount]]"
@@ -86,7 +88,9 @@
 
 			properties: {
 				/**
-				 * 삭제해서는 안되는 조건 체크 
+				 * 삭제해서는 안되는 조건 체크
+				 * *******
+				 * @type {Object}
 				 */
 				deleteRecordValidation: {
 					type: Object,
@@ -95,7 +99,7 @@
 					}
 				}
 			},
-			
+
 			listeners : {
 				'grid.things-grid-configure': '_onBeforeGridConfigure',
 				'grid.things-grid-column-dblclicked' : '_gridDoubleClicked',
@@ -105,11 +109,12 @@
 
 			/**
 			 * 그리드 컬럼 메타 정보가 변경된 이후 ...
+			 * ********
 			 *
 			 * @param {Object} event
 			 */
 			_onBeforeGridConfigure: function(event) {
-				// 연결 / 연결 해제 ... 
+				// 연결 / 연결 해제 ...
 				var actionColumn = {
 					fieldName: '_action_button_',
 					name: '_action_button_',
@@ -137,7 +142,7 @@
 			},
 
 			/**
-			 * Grid Double Click 후 
+			 * Grid Double Click 후
 			 *
 			 * @param {Objec} event
 			 */
@@ -160,7 +165,7 @@
 
 			/**
 			 * Connect Datasource
-			 *
+			 ********
 			 * @param {Object} data
 			 */
 			connectDatasource: function(data) {
@@ -170,7 +175,7 @@
 
 			/**
 			 * Disconnect Datasource
-			 *
+			 *********
 			 * @param {Object} data
 			 */
 			closeDatasource: function(data) {
@@ -180,7 +185,7 @@
 
 			/**
 			 * Invoke Ajax
-			 *
+			 ********
 			 * @param {String} ajaxId
 			 * @param {String} title
 			 * @param {Object} record
