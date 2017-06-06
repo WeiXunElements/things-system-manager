@@ -65,33 +65,31 @@
 			],
 
 			listeners: {
-				'grid.things-grid-handle-addrow': 'addBtnTapped'
+				'grid.things-grid-handle-addrow': 'onAddUser'
 			},
 
       /**
-       * add Button Tapped
+       * 추가 버튼 클릭시 
        * *******
        * @param {event} event add button 이벤트
        */
-			addBtnTapped: function(event) {
+			onAddUser: function(event) {
 				event.preventDefault();
-
-				var view = document.createElement('things-system-user-add');
+				var detailScreenId = this.menuInfo.detail_form_id ? 
+														 this.menuInfo.detail_form_id : 'things-system-user-add';
+				var view = document.createElement(detailScreenId);
 				view.title = Things.DataGlobal.t('button.add');
 
-				var me = this;
 				var closeCallback = function() {
-					me.refreshData();
-				};
+					this.refreshData();
+				}.bind(this);
 
-				var request = {
+				this.fire('things-open-custom-size-dialog', {
 					view: view,
 					modal: true,
 					dialogSize: 'medium',
 					closeCallback: closeCallback
-				};
-
-				this.fire('things-open-custom-size-dialog', request);
+				});
 			}
 		});
 	</script>
