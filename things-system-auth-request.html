@@ -204,7 +204,6 @@ things-system-auth-request
             /**
              * 요청 전후의 listners
              * ******
-             *
              */
             listeners: {
                 'process-ajax.things-ajax-request': '_requestProcessing',
@@ -212,8 +211,9 @@ things-system-auth-request
             },
 
             /**
-             * response의 값이 변경 되었을 때 요청한 사용자의 id를 추출하고
-             * 버튼을 구성 한다.
+             * response의 값이 변경 되었을 때 요청한 사용자의 id를 추출하고 버튼을 구성 한다.
+             * ******
+             * @param {Object} response
              */
             _responseChanged: function(response) {
                 this.buttonConfig(response.status, response.request_type);
@@ -222,7 +222,8 @@ things-system-auth-request
             /**
              * 권한 요청 정보의 상태와, 타입에 따라 버튼을 구성한다.
              * *****
-             *
+             * @param {String} status
+             * @param {String} reqType
              */
             buttonConfig: function(status, reqType) {
                 if(status != 'WAIT') {
@@ -273,6 +274,7 @@ things-system-auth-request
              * 버튼 텝 이벤트 발생시 해당 버튼의 아이디를 통해
              * ajax url을 초기화 한다.
              * *******
+             * @param {Object} event
              */
             btnTapped: function(event) {
                 var btnId = event.model.button.id;

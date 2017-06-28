@@ -58,7 +58,7 @@
 		<things-i18n-msg auto msgid="label.confirmed_password" msg="{{labelConfirmPassword}}" hidden></things-i18n-msg>
 
 		<things-ajax
-			id="add-user-ajax"
+			id="create-user-ajax"
 			resource-url="users"
 			resource-action="create">
 		</things-ajax>
@@ -76,6 +76,7 @@
 				<things-input-field label="[[labelPassword]]" type="password" value="{{password}}" required auto-validate tab-index ='9'>
 				</things-input-field>
 			</div>
+
 			<div class="sub-container">
 				<things-input-field label="[[labelEmail]]" value="{{email}}" required auto-validate validator="things-validator-email" tab-index ='2'></things-input-field>
 				<things-code-combo label="[[labelLocale]]" code-name="LOCALE" label-path="description" value-path="name" value="{{locale}}" tab-index ='4'></things-code-combo>
@@ -102,7 +103,7 @@
 
 			properties: {
 				/**
-				 *버튼 그룹
+				 * buttons of this screen
 				 *******
 				 *@type {Array}
 				 */
@@ -112,8 +113,9 @@
 						return [{ id: 'save-btn', text: 'save' }];
 					}
 				},
+
 				/**
-				 *수퍼 유저
+				 * super user or not
 				 *******
 				 *@type {Boolean}
 				 */
@@ -121,8 +123,9 @@
 					type: Boolean,
 					value: false
 				},
+
 				/**
-				 *오프레이터 flag
+				 * operator or not
 				 *******
 				 *@type {Boolean}
 				 */
@@ -130,8 +133,9 @@
 					type: Boolean,
 					value: false
 				},
+
 				/**
-				 *admin flag
+				 * administrator or not
 				 *******
 				 *@type {Boolean}
 				 */
@@ -139,8 +143,9 @@
 					type: Boolean,
 					value: false
 				},
+
 				/**
-				 *activeflag
+				 * active or not
 				 *******
 				 *@type {Boolean}
 				 */
@@ -151,16 +156,17 @@
 			},
 
 			listeners: {
-				'save-btn-tap': 'saveBtnTapped',
-				'add-user-ajax.things-ajax-response': 'addUserResponsed'
+				'save-btn-tap': 'createUser',
+				'create-user-ajax.things-ajax-response': 'afterUserCreated'
 			},
+
 			/**
-			 *save button tapped
+			 * save user
 			 *******
 			 */
-			saveBtnTapped: function() {
-				if(this.validateForms()) {
-					var addUserAjax = this.$['add-user-ajax'];
+			createUser: function() {
+				if(this.validateForm()) {
+					var addUserAjax = this.$['create-user-ajax'];
 					addUserAjax.body = {
 						login: this.login,
 						encrypted_password: this.password,
@@ -177,33 +183,44 @@
 					addUserAjax.generateRequest();
 				}
 			},
+
 			/**
-			 *validateForms
+			 * validate user form
 			 *******
 			 */
-			validateForms: function() {
-				if(this.login && this.name && this.password && this.email && this.locale && this.confirmedPassword && this.password == this.confirmedPassword) {
+			validateForm: function() {
+				if(this.login &&
+					 this.name &&
+					 this.password &&
+					 this.email &&
+					 this.locale &&
+					 this.confirmedPassword &&
+					 this.password == this.confirmedPassword) {
 					return true;
+
 				} else {
 					this.openConfirmMsg({
+						type: 'warn',
 						title: Things.DataGlobal.t('text.invalid_input'),
 						text: Things.DataGlobal.t('text.info_invalid')
 					});
-
 					return false;
 				}
 			},
+
 			/**
-			 *addUserResponsed
+			 * after User Created
 			 *******
+			 * @param {Object} event
 			 */
-			addUserResponsed: function(event) {
+			afterUserCreated: function(event) {
 				this.clearValue();
 				var dialogCloseEvent = new CustomEvent('things-dialog-close');
 				document.dispatchEvent(dialogCloseEvent);
 			},
+
 			/**
-			 *clearValue
+			 * clear value
 			 *******
 			 */
 			clearValue: function() {

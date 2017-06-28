@@ -450,7 +450,7 @@
 
 			/**
 			 * Domain App Entity Meta 구성 완료시
-			 *
+			 ******
 			 * @param {Object} event Entity Meta 구성 완료
 			 */
 			_domainAppEntityMetaConfigured: function(event) {
@@ -463,7 +463,7 @@
 
 			/**
 			 * Domain App Entity Meta 구성 완료시
-			 *
+			 ******
 			 * @param {Object} event
 			 */
 			_onDomainSelected: function(event) {
@@ -473,7 +473,7 @@
 
 			/**
 			 * 리스트 화면의 add 버튼 클릭시 ... 기존의 로직을 override하고 dialog를 open
-			 *
+			 ******
 			 * @param {Object} event
 			 */
 			_onTapAdd: function(event) {
@@ -483,7 +483,7 @@
 
 			/**
 			 * 리스트 화면의 delete 버튼 클릭시 발생. 기존의 로직을 override하고 domain 삭제 절차를 진행함
-			 *
+			 ******
 			 * @param {Object} event
 			 */
 			_onTapDelete: function(event) {
@@ -523,7 +523,7 @@
 
 			/**
 			 * export 버튼을 눌렀을 때 발생 export-domain ajax를 호출
-			 *
+			 ******
 			 * @param {Object} event
 			 */
 			_onTapExport: function(evnet) {
@@ -534,7 +534,7 @@
 
 			/**
 			 * Ajax 호출 전 ...
-			 *
+			 ******
 			 * @param {String} title
 			 * @param {String} text
 			 */
@@ -550,7 +550,7 @@
 
 			/**
 			 * ajax 호출이 완료 된 후 발생
-			 *
+			 ******
 			 * @param {Object} e
 			 */
 			_ajaxSuccess: function(e) {
@@ -559,7 +559,7 @@
 
 			/**
 			 * ajax 호출이 실패 한 후 발생
-			 *
+			 ******
 			 * @param {Object} e
 			 */
 			_ajaxFailed: function(e) {
@@ -568,7 +568,7 @@
 
 			/**
 			 * Domain App이 조회된 이 후
-			 *
+			 ******
 			 * @param {Object} e
 			 */
 			_domainAppsCompleted: function(event) {
@@ -577,7 +577,7 @@
 
 			/**
 			 * validate-domain-trancate ajax의 response가 도착하면 발생. truncate-domain ajax를 호출함
-			 *
+			 ******
 			 * @param {Object} e
 			 */
 			_truncateDomainValid: function(e) {
@@ -589,7 +589,7 @@
 
 			/**
 			 * delete ajax의 response가 도착하면 완료되었음을 알림. delete된 domain의 id, name을 clear
-			 *
+			 ******
 			 * @param {Object} event
 			 */
 			_deleteCompleted: function(event) {

@@ -1,9 +1,15 @@
 <link rel="import" href="../polymer/polymer.html">
+
 <link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-grid/things-resource-grid.html">
 <link rel="import" href="../things-detail/things-resource-detail-tab-view-behavior.html">
+<link rel="import" href="../things-grid/things-resource-grid.html">
+<link rel="import" href="../things-layout-view/things-layout-hera.html">
 <link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
-<link rel="import" href="../../elements/things-layout-view/things-layout-hera.html">
+
+<!--
+## things-system-scene-auth
+	Scene 그룹 권한 관리 화면
+-->
 
 <dom-module id="things-system-scene-auth">
 	<template>
@@ -38,7 +44,6 @@
 		<things-layout-hera
 			left-content-title="[[leftContentTitle]]"
 			right-content-title="[[rightContentTitle]]">
-
 			<things-resource-grid
 				left
 				id="scene-group-grid"
@@ -60,9 +65,9 @@
 				fixed-column-count="0"
 				buttons="[[playGroupButton]]">
 			</things-resource-grid>
-
 		</things-layout-hera>
 	</template>
+
 	<script>
 		Polymer({
 			is: 'things-system-scene-auth',
@@ -73,8 +78,8 @@
 			],
 
 			properties: {
-
 				/**
+				 * 좌측 상단 타이틀
 				 * *******
 				 */
 				leftContentTitle: {
@@ -83,7 +88,9 @@
 						return Things.DataGlobal.t('menu.SceneGroup');
 					}
 				},
+
 				/**
+				 * 우측 상단 타이틀
 				 * *******
 				 */
 				rightContentTitle: {
@@ -92,7 +99,9 @@
 						return Things.DataGlobal.t('label.play_group');
 					}
 				},
+
 				/**
+				 * Grid configuration
 				 * *******
 				 */
 				gridConfig: {
@@ -108,7 +117,9 @@
 						}
 					}
 				},
+
 				/**
+				 * Grid Model
 				 * *******
 				 */
 				gridModel: {
@@ -130,7 +141,9 @@
 						}]
 					}
 				},
+
 				/**
+				 * Grid Columns
 				 * *******
 				 */
 				gridColumns: {
@@ -258,6 +271,7 @@
 			 * user_scene_group의 호출에 대한 response가 도착하면
 			 * sceneGroups와 playGroups를 초기화하여 각기 그리드에 출력
 			 * *******
+			 * @param {Array} groupList
 			 */
 			groupListChanged: function(groupList) {
 				var sceneGroups = [];
@@ -277,6 +291,7 @@
 			/**
 			 * 변경된 그룹 정보를 저장하기 위한 handeler
 			 * *******
+			 * @param {Object} event
 			 */
 			groupSaveHandeler: function(event) {
 				event.preventDefault();
@@ -314,13 +329,18 @@
 					sceneGroupSaveAjax.body = tempArray;
 					sceneGroupSaveAjax.generateRequest();
 				} else {
-					this.openInfoMsg({ title : Things.DataGlobal.t('title.info'), text : Things.DataGlobal.t('text.NOTHING_CHANGED'), type : 'info' });
+					this.openInfoMsg({
+						type : 'info',
+						title : Things.DataGlobal.t('title.info'),
+						text : Things.DataGlobal.t('text.NOTHING_CHANGED')
+					});
 				}
 			},
 
 			/**
 			 * 데이터가 변경되었는지 확인함
 			 * *********
+			 * @param {Object} data
 			 */
 			checkDataChanged: function(data) {
 				var result = true;
@@ -340,6 +360,7 @@
 			/**
 			 * save ajax response시 그리드를 재구성하기 위해 ajax 호출
 			 * *******
+			 * @param {Object} event
 			 */
 			saveAjaxResponsed: function(event) {
 				this.$['user-groups-ajax'].generateRequest();
@@ -348,6 +369,7 @@
 			/**
 			 * play check all button tapped
 			 * ********
+			 * @param {Object} event
 			 */
 			checkAllBtnTapped: function(event) {
 				var targetGrid = (event.detail.id.indexOf('scene') == 0) ? this.$['scene-group-grid'] : this.$['play-group-grid'];
