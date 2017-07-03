@@ -1,6 +1,6 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright (c) 2017, HatioLab Inc. All right reserved.
 -->
 <link rel="import" href="../polymer/polymer.html">
 
@@ -335,8 +335,8 @@ Copyright © HatioLab Inc. All rights reserved.
 					type: Array,
 					value: function() {
 						return [ {
-							label: Things.DataGlobal.t('label.brand_name'),
-							name: 'brand_name',
+							label: Things.DataGlobal.t('label.domain_code'),
+							name: 'domain_name',
 							type: 'text',
 							userObj: {
 								type: 'string',
@@ -344,8 +344,8 @@ Copyright © HatioLab Inc. All rights reserved.
 								max: 32
 							}
 						}, {
-							label: Things.DataGlobal.t('label.domain'),
-							name: 'domain_name',
+							label: Things.DataGlobal.t('label.domain_name'),
+							name: 'brand_name',
 							type: 'text',
 							userObj: {
 								type: 'string',
@@ -372,6 +372,15 @@ Copyright © HatioLab Inc. All rights reserved.
 								required: true
 							}
 						}, {
+							label: Things.DataGlobal.t('label.admin_id'),
+							name: 'admin_id',
+							type: 'text',
+							userObj: {
+								type: 'string',
+								required: true,
+								max: 20
+							}
+						}, {
 							label: Things.DataGlobal.t('label.admin_name'),
 							name: 'admin_name',
 							type: 'text',
@@ -387,7 +396,7 @@ Copyright © HatioLab Inc. All rights reserved.
 							userObj: {
 								type: 'string',
 								required: true,
-								max: 64,
+								max: 36,
 								validator: 'things-validator-email'
 							}
 						}, {
@@ -397,7 +406,7 @@ Copyright © HatioLab Inc. All rights reserved.
 							userObj: {
 								type: 'string',
 								required: true,
-								max: 32
+								max: 20
 							}
 						}, {
 							label: Things.DataGlobal.t('label.confirmed_password'),
@@ -406,7 +415,7 @@ Copyright © HatioLab Inc. All rights reserved.
 							userObj: {
 								type: 'string',
 								required: true,
-								max: 32
+								max: 20
 							}
 						}, {
 							label: Things.DataGlobal.t('label.storage_root'),
@@ -438,6 +447,7 @@ Copyright © HatioLab Inc. All rights reserved.
 				'setup-domain.things-ajax-error': '_ajaxFailed',
 				'domain-app-list-ajax.things-ajax-response' : '_domainAppsCompleted',
 				'domain-app-entity-meta.things-entity-meta-configured': '_domainAppEntityMetaConfigured',
+				'form.things-form-configured': '_formConfigured',
 				'form.setup-btn-tap': 'saveDomain'
 			},
 
@@ -450,6 +460,46 @@ Copyright © HatioLab Inc. All rights reserved.
 				var imageColumn = e.detail.columns()[0];
 				imageColumn.styles().setIconIndex('close_button.png');
 				this.$['domain-app-entity-meta'].loadMeta();
+			},
+
+			/**
+			 * 폼 구성 이후 
+			 * ********
+			 * @param {Object} event
+			 */
+			_formConfigured: function(event) {
+				var elements = this.$.form.getFormElements();
+				for(var i = 0 ; i < elements.length ; i++) {
+					var element = elements[i];
+
+					if(element.name == 'domain_url') {
+						element.placeholder = 'Domain DNS or IP';
+
+					} else if(element.name == 'storage_root') {
+						element.placeholder = 'Storage Root Directory';
+					}
+				}
+			},
+
+			/**
+			 * add-dialog 내부의 save 버튼 클릭시 발생.
+			 * add-dialog에 입력 받은 데이터를 바탕으로 vaidate-domain ajax를 호출 함
+			 * ********
+			 */
+			saveDomain: function() {
+				var validateAjax = this.$['validate-domain-setup'];
+				var formData = this.$.form.serializeMyForm();
+
+				if(this.passwordConfirm(formData.password, formData.confirmed_password)) {
+					validateAjax.body = formData;
+					validateAjax.generateRequest();
+
+				} else {
+					this.openConfirmMsg({ 
+						text: Things.DataGlobal.t('text.Passwords do not match'), 
+						title: Things.DataGlobal.t('label.password_confirmation') 
+					});
+				}
 			},
 
 			/**
@@ -532,8 +582,24 @@ Copyright © HatioLab Inc. All rights reserved.
 			 */
 			_onTapExport: function(evnet) {
 				event.preventDefault();
-				this._beforeRequestAjax(Things.DataGlobal.t('button.export'), Things.DataGlobal.t('text.Server Processing'));
-				this.$['export-domain'].generateRequest();
+
+				this.openConfirmMsg({
+					type: 'info',
+					title: Things.DataGlobal.t('button.export'),
+					text: Things.DataGlobal.t('text.Sure to process'),
+					showCancelButton: true,
+					closeOnCancel: true,
+					allowEscapeKey: false,
+					allowOutsideClick: false
+
+				}, function() {
+					this._beforeRequestAjax(
+						Things.DataGlobal.t('button.export'), 
+						Things.DataGlobal.t('text.Server Processing')
+					);
+					this.$['export-domain'].generateRequest();
+
+				}.bind(this));
 			},
 
 			/**
@@ -587,7 +653,10 @@ Copyright © HatioLab Inc. All rights reserved.
 			_truncateDomainValid: function(e) {
 				var deleteAjax = this.$['truncate-domain'];
 				deleteAjax.body = { token : this.sha256(this.selectedName) };
-				this._beforeRequestAjax(Things.DataGlobal.t('button.delete'), Things.DataGlobal.t('text.Server Processing'));
+				this._beforeRequestAjax(
+					Things.DataGlobal.t('button.delete'), 
+					Things.DataGlobal.t('text.Server Processing')
+				);
 				deleteAjax.generateRequest();
 			},
 
@@ -616,7 +685,10 @@ Copyright © HatioLab Inc. All rights reserved.
 					validateAjax.body = formData;
 					validateAjax.generateRequest();
 				} else {
-					this.openConfirmMsg({ text: Things.DataGlobal.t('text.Passwords do not match'), title: Things.DataGlobal.t('label.password_confirmation') });
+					this.openConfirmMsg({ 
+						text: Things.DataGlobal.t('text.Passwords do not match'), 
+						title: Things.DataGlobal.t('label.password_confirmation') 
+					});
 				}
 			},
 
