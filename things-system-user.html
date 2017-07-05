@@ -69,8 +69,28 @@ Copyright © HatioLab Inc. All rights reserved.
 			],
 
 			listeners: {
-				'grid.things-grid-handle-addrow': 'onAddUser'
+				'grid.things-grid-handle-addrow': 'onAddUser',
+				'grid.things-grid-configured': '_gridConfigured'
 			},
+
+			/**
+			 * 그리드 구성 완료 이벤트 리스너
+			 * 사용자 화면에서는 메뉴의 메타 데이터를 통해 추가 (사용자 생성) 화면을 구성한다.
+			 * 메뉴 메타의 데이터가 있어도 디테일 팝업이 나타나지 않도록 그리드 구성 이후
+			 * Detail이라는 명칭의 컬럼을 제거함
+			 * @param {event} 
+			 */
+			_gridConfigured: function(event) {
+				var grid = event.detail;
+				var columns = grid.columns();
+
+				for(i in columns) {
+					if(columns[i].name() == 'Detail')
+						columns.splice(i, 1);
+				};
+
+				grid.setColumns(columns);
+			},			
 
       /**
        * 추가 버튼 클릭시 
