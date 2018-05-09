@@ -7,7 +7,6 @@ Copyright © HatioLab Inc. All rights reserved.
 <link rel="import" href="../things-ajax/things-ajax.html">
 <link rel="import" href="../things-detail/things-resource-detail-tab-view-behavior.html">
 <link rel="import" href="../things-grid/things-resource-grid.html">
-<link rel="import" href="../things-layout-view/things-layout-hera.html">
 <link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
 
 <!--
@@ -22,12 +21,28 @@ Copyright © HatioLab Inc. All rights reserved.
 				display:block;
 				@apply(--layout-vertical);
 			}
-			things-layout-hera {
-				@apply(--layout-flex);
-			}
 			things-resource-grid {
 				@apply(--layout-flex);
 			}
+			.horizontal {
+				@apply(--layout-horizontal);
+			}
+			.column {
+				@apply(--layout-vertical);
+			}
+			.flex {
+				@apply(--layout-flex);
+			}
+      .subtitle:before {
+        content: '';
+        @apply(--things-subtitle-icon);
+      }
+
+      .subtitle {
+        @apply(--things-default-padding);
+        @apply(--things-subtitle);
+        padding-left: 16px
+      }
 		</style>
 
 		<things-ajax
@@ -45,31 +60,35 @@ Copyright © HatioLab Inc. All rights reserved.
 			last-response="{{groupList}}">
 		</things-ajax>
 
-		<things-layout-hera
-			left-content-title="[[leftContentTitle]]"
-			right-content-title="[[rightContentTitle]]">
-			<things-resource-grid
-				left
-				id="scene-group-grid"
-				config="[[gridConfig]]"
-				model="[[gridModel]]"
-				columns="[[gridColumns]]"
-				data="[[sceneGroups]]"
-				fixed-column-count="0"
-				buttons="[[sceneGroupButton]]">
-			</things-resource-grid>
+		<div class="horizontal flex">
+			<div class="column flex">
+				<span class="subtitle">[[leftContentTitle]]</span>
+				<things-resource-grid
+					left
+					id="scene-group-grid"
+					config="[[gridConfig]]"
+					model="[[gridModel]]"
+					columns="[[gridColumns]]"
+					data="[[sceneGroups]]"
+					fixed-column-count="0"
+					buttons="[[sceneGroupButton]]">
+				</things-resource-grid>
+			</div>
 
-			<things-resource-grid
-				right
-				id="play-group-grid"
-				config="[[gridConfig]]"
-				model="[[gridModel]]"
-				columns="[[gridColumns]]"
-				data="[[playGroups]]"
-				fixed-column-count="0"
-				buttons="[[playGroupButton]]">
-			</things-resource-grid>
-		</things-layout-hera>
+			<div class="column flex">
+				<span class="subtitle">[[rightContentTitle]]</span>
+				<things-resource-grid
+					right
+					id="play-group-grid"
+					config="[[gridConfig]]"
+					model="[[gridModel]]"
+					columns="[[gridColumns]]"
+					data="[[playGroups]]"
+					fixed-column-count="0"
+					buttons="[[playGroupButton]]">
+				</things-resource-grid>
+			</div>
+		</div>
 	</template>
 
 	<script>
