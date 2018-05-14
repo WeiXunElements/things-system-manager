@@ -41,7 +41,7 @@ Copyright © HatioLab Inc. All rights reserved.
 			sort-fields="[[sortFields]]"
 			action-url="[[menuInfo.resource_url]]"
 			page="{{page}}"
-			limit="[[limit]]"
+			limit="{{limit}}"
 			last-response="{{lastResponse}}">
 		</things-search-form>
 
@@ -78,7 +78,7 @@ Copyright © HatioLab Inc. All rights reserved.
 			 * 사용자 화면에서는 메뉴의 메타 데이터를 통해 추가 (사용자 생성) 화면을 구성한다.
 			 * 메뉴 메타의 데이터가 있어도 디테일 팝업이 나타나지 않도록 그리드 구성 이후
 			 * Detail이라는 명칭의 컬럼을 제거함
-			 * @param {event} 
+			 * @param {event}
 			 */
 			_gridConfigured: function(event) {
 				var grid = event.detail;
@@ -90,16 +90,16 @@ Copyright © HatioLab Inc. All rights reserved.
 				};
 
 				grid.setColumns(columns);
-			},			
+			},
 
       /**
-       * 추가 버튼 클릭시 
+       * 추가 버튼 클릭시
        * *******
        * @param {event} event add button 이벤트
        */
 			onAddUser: function(event) {
 				event.preventDefault();
-				var detailScreenId = this.menuInfo.detail_form_id ? 
+				var detailScreenId = this.menuInfo.detail_form_id ?
 														 this.menuInfo.detail_form_id : 'things-system-user-add';
 				var view = document.createElement(detailScreenId);
 				view.title = Things.DataGlobal.t('button.add');
