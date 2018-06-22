@@ -1,28 +1,28 @@
 {
-  "name": "things-system-manager",
-  "version": "v2.2.2",
-  "authors": [
-    "Hatio Lab. <heartyoh@hatiolab.com>"
-  ],
-  "description": "An element providing Things Profile",
-  "keywords": [
-    "web-component",
-    "polymer",
-    "seed"
-  ],
-  "main": "things-system-manager.html",
-  "license": "http://license.hatiolab.com/EULA",
-  "homepage": "http://elements.hatiolab.com/",
-  "ignore": [
-    "/.*",
-    "/test/"
-  ],
-  "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.0"
-  },
-  "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "web-component-tester": "^4.0.0",
-    "iron-demo-helpers": "^1.2.3"
-  }
+    "name": "things-system-manager",
+    "version": "v2.2.3",
+    "authors": [
+        "Hatio Lab. <heartyoh@hatiolab.com>"
+    ],
+    "description": "An element providing Things Profile",
+    "keywords": [
+        "web-component",
+        "polymer",
+        "seed"
+    ],
+    "main": "things-system-manager.html",
+    "license": "http://license.hatiolab.com/EULA",
+    "homepage": "http://elements.hatiolab.com/",
+    "ignore": [
+        "/.*",
+        "/test/"
+    ],
+    "dependencies": {
+        "polymer": "Polymer/polymer#^1.2.0"
+    },
+    "devDependencies": {
+        "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+        "web-component-tester": "^4.0.0",
+        "iron-demo-helpers": "^1.2.3"
+    }
 }
