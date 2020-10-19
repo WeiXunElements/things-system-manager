@@ -56,7 +56,7 @@ Copyright © HatioLab Inc. All rights reserved.
 			limit="{{limit}}"
 			fixed-column-count="[[menuInfo.fixed_columns]]"
 			grid-save-action="[[menuInfo.grid_save_url]]"
-			buttons="[[buttons]]">
+			buttons="[[custButtons]]">
 		</things-resource-grid>
 	</template>
 
@@ -72,19 +72,29 @@ Copyright © HatioLab Inc. All rights reserved.
                 'grid.things-grid-handle-addrow': 'onAddUser',
                 'grid.things-grid-configured': '_gridConfigured',
 
-                // search form event
-                'things-search-form-configured': 'onSearchFormConfigured',
-
                 // button event
                 'reset-pwd-btn-tap': 'onResetPwdBtnTapped'
             },
 
-            onSearchFormConfigured: function(event) {
+            properties: {
+                buttons: {
+                    type: Array,
+                    observer: 'onButtonsChanged'
+                },
+                custButtons: Array
+            },
+
+            onButtonsChanged: function(buttons) {
                 const visibleResetBtn = this.globals.user && this.globals.user.super_user;
-                this.$.grid.$$('#button-group').querySelectorAll('things-button').forEach(btn => {
-                    if (btn.id === 'reset-pwd-btn')
-                        btn.hidden = !visibleResetBtn; 
-                });
+                if (!visibleResetBtn) {
+                    for (let i in buttons) {
+                        if (buttons[i].id === 'reset-pwd-btn') {
+                            buttons.splice(i, 1);
+                            break;
+                        }
+                    }
+                    this.custButtons = buttons;
+                }
             },
 
             /**
