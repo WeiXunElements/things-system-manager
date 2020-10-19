@@ -72,7 +72,19 @@ Copyright © HatioLab Inc. All rights reserved.
                 'grid.things-grid-handle-addrow': 'onAddUser',
                 'grid.things-grid-configured': '_gridConfigured',
 
+                // search form event
+                'things-search-form-configured': 'onSearchFormConfigured',
+
+                // button event
                 'reset-pwd-btn-tap': 'onResetPwdBtnTapped'
+            },
+
+            onSearchFormConfigured: function(event) {
+                const visibleResetBtn = this.globals.user && this.globals.user.super_user;
+                this.$.grid.$$('#button-group').querySelectorAll('things-button').forEach(btn => {
+                    if (btn.id === 'reset-pwd-btn')
+                        btn.hidden = !visibleResetBtn; 
+                });
             },
 
             /**
@@ -83,14 +95,13 @@ Copyright © HatioLab Inc. All rights reserved.
              * @param {event}
              */
             _gridConfigured: function(event) {
-                var grid = event.detail;
-                var columns = grid.columns();
+                const grid = event.detail;
+                let columns = grid.columns();
 
-                for (i in columns) {
-                    if (columns[i].name() == 'Detail')
+                for (let i in columns) {
+                    if (columns[i].name() === 'Detail')
                         columns.splice(i, 1);
-                };
-
+                }
                 grid.setColumns(columns);
             },
 
