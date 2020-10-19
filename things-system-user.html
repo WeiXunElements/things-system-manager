@@ -70,7 +70,9 @@ Copyright © HatioLab Inc. All rights reserved.
 
             listeners: {
                 'grid.things-grid-handle-addrow': 'onAddUser',
-                'grid.things-grid-configured': '_gridConfigured'
+                'grid.things-grid-configured': '_gridConfigured',
+
+                'reset-pwd-btn-tap': 'onResetPwdBtnTapped'
             },
 
             /**
@@ -114,6 +116,38 @@ Copyright © HatioLab Inc. All rights reserved.
                     dialogSize: 'medium',
                     closeCallback: closeCallback
                 });
+            },
+
+            onResetPwdBtnTapped: function(event) {
+                this.openConfirmMsg({
+                    title: Things.DataGlobal.t('title.confirm'),
+                    text: Things.DataGlobal.t('text.Common_sure_to_reset_password'),
+                    showCancelButton: true
+                }, () => {
+                    this._doResetPassword();
+                });
+            },
+
+            _doResetPassword: function() {
+                const grid = this.$.grid;
+                grid.grid.commit();
+        
+                const checkedRows = grid.getGridObject().getCheckedRows();
+                if (checkedRows.length === 0) return null;
+
+                const checkedUserList = checkedRows.map(item => item.getRowObject());
+
+                let ajaxResetPwd = document.createElement('things-ajax');
+                this.listen(ajaxResetPwd, 'things-ajax-response', '_doSearch');
+
+                ajaxResetPwd.resourceUrl = 'users/reset/password';
+                ajaxResetPwd.resourceAction = 'update_multiple';
+                ajaxResetPwd.body = checkedUserList;
+                ajaxResetPwd.generateRequest();
+            },
+
+            _doSearch: function() {
+                this.$['search-form'].submitMyForm();
             }
         });
     </script>
