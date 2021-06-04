@@ -1,13 +1,13 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
 
-<link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-detail/things-resource-detail-tab-view-behavior.html">
-<link rel="import" href="../things-grid/things-resource-grid.html">
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
+<link rel="import" href="../things-ajax/things-ajax.html" />
+<link rel="import" href="../things-detail/things-resource-detail-tab-view-behavior.html" />
+<link rel="import" href="../things-grid/things-resource-grid.html" />
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html" />
 
 <!--
 ## things-system-scene-auth
@@ -15,400 +15,429 @@ Copyright © HatioLab Inc. All rights reserved.
 -->
 
 <dom-module id="things-system-scene-auth">
-	<template>
-		<style>
-			:host{
-				display:block;
-				@apply(--layout-vertical);
-			}
-			things-resource-grid {
-				@apply(--layout-flex);
-			}
-			.horizontal {
-				@apply(--layout-horizontal);
-			}
-			.column {
-				@apply(--layout-vertical);
-			}
-			.flex {
-				@apply(--layout-flex);
-			}
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply (--layout-vertical);
+      }
+      things-resource-grid {
+        @apply (--layout-flex);
+      }
+      .horizontal {
+        @apply (--layout-horizontal);
+      }
+      .column {
+        @apply (--layout-vertical);
+      }
+      .flex {
+        @apply (--layout-flex);
+      }
       .subtitle:before {
-        content: '';
-        @apply(--things-subtitle-icon);
+        content: "";
+        @apply (--things-subtitle-icon);
       }
 
       .subtitle {
-        @apply(--things-default-padding);
-        @apply(--things-subtitle);
-        padding-left: 16px
+        @apply (--things-default-padding);
+        @apply (--things-subtitle);
+        padding-left: 16px;
       }
-		</style>
+    </style>
 
-		<things-ajax
-			id="scene-group-ajax"
-			resource-url="user_scene_groups/update_multiple"
-			resource-action="update_multiple">
-		</things-ajax>
+    <things-ajax
+      id="scene-group-ajax"
+      resource-url="user_scene_groups/update_multiple"
+      resource-action="update_multiple"
+    >
+    </things-ajax>
 
-		<things-ajax
-			auto
-			id="user-groups-ajax"
-			resource-url="user_scene_groups/user_groups/:id"
-			resource-id="[[resourceId]]"
-			resource-adtion="index"
-			last-response="{{groupList}}">
-		</things-ajax>
+    <things-ajax
+      auto
+      id="user-groups-ajax"
+      resource-url="user_scene_groups/user_groups/:id"
+      resource-id="[[resourceId]]"
+      resource-adtion="index"
+      last-response="{{groupList}}"
+    >
+    </things-ajax>
 
-		<div class="horizontal flex">
-			<div class="column flex">
-				<span class="subtitle">[[leftContentTitle]]</span>
-				<things-resource-grid
-					left
-					id="scene-group-grid"
-					config="[[gridConfig]]"
-					model="[[gridModel]]"
-					columns="[[gridColumns]]"
-					data="[[sceneGroups]]"
-					fixed-column-count="0"
-					buttons="[[sceneGroupButton]]">
-				</things-resource-grid>
-			</div>
+    <div class="horizontal flex">
+      <div class="column flex">
+        <span class="subtitle">[[leftContentTitle]]</span>
+        <things-resource-grid
+          left
+          id="scene-group-grid"
+          config="[[gridConfig]]"
+          model="[[gridModel]]"
+          columns="[[gridColumns]]"
+          data="[[sceneGroups]]"
+          fixed-column-count="0"
+          buttons="[[sceneGroupButton]]"
+        >
+        </things-resource-grid>
+      </div>
 
-			<div class="column flex">
-				<span class="subtitle">[[rightContentTitle]]</span>
-				<things-resource-grid
-					right
-					id="play-group-grid"
-					config="[[gridConfig]]"
-					model="[[gridModel]]"
-					columns="[[gridColumns]]"
-					data="[[playGroups]]"
-					fixed-column-count="0"
-					buttons="[[playGroupButton]]">
-				</things-resource-grid>
-			</div>
-		</div>
-	</template>
+      <div class="column flex">
+        <span class="subtitle">[[rightContentTitle]]</span>
+        <things-resource-grid
+          right
+          id="play-group-grid"
+          config="[[gridConfig]]"
+          model="[[gridModel]]"
+          columns="[[gridColumns]]"
+          data="[[playGroups]]"
+          fixed-column-count="0"
+          buttons="[[playGroupButton]]"
+        >
+        </things-resource-grid>
+      </div>
+    </div>
+  </template>
 
-	<script>
-		Polymer({
-			is: 'things-system-scene-auth',
+  <script>
+    Polymer({
+      is: "things-system-scene-auth",
 
-			behaviors: [
-				Things.ResourceDetailTabViewBahavior,
-				Things.MsgBoxBehavior
-			],
+      behaviors: [Things.ResourceDetailTabViewBahavior, Things.MsgBoxBehavior],
 
-			properties: {
-				/**
-				 * 좌측 상단 타이틀
-				 * *******
-				 */
-				leftContentTitle: {
-					type: String,
-					value: function() {
-						return Things.DataGlobal.t('menu.SceneGroup');
-					}
-				},
+      properties: {
+        /**
+         * 좌측 상단 타이틀
+         * *******
+         */
+        leftContentTitle: {
+          type: String,
+          value: function () {
+            return Things.DataGlobal.t("menu.SceneGroup");
+          },
+        },
 
-				/**
-				 * 우측 상단 타이틀
-				 * *******
-				 */
-				rightContentTitle: {
-					type: String,
-					value: function() {
-						return Things.DataGlobal.t('label.play_group');
-					}
-				},
+        /**
+         * 우측 상단 타이틀
+         * *******
+         */
+        rightContentTitle: {
+          type: String,
+          value: function () {
+            return Things.DataGlobal.t("label.play_group");
+          },
+        },
 
-				/**
-				 * Grid configuration
-				 * *******
-				 */
-				gridConfig: {
-					type: Object,
-					value: function() {
-						return {
-							displayOptions: {
-								fitStyle: 'evenFill'
-							},
-							options: {
-								checkBar: false
-							}
-						}
-					}
-				},
+        /**
+         * Grid configuration
+         * *******
+         */
+        gridConfig: {
+          type: Object,
+          value: function () {
+            return {
+              displayOptions: {
+                fitStyle: "evenFill",
+              },
+              options: {
+                checkBar: false,
+              },
+            };
+          },
+        },
 
-				/**
-				 * Grid Model
-				 * *******
-				 */
-				gridModel: {
-					type: Array,
-					value: function() {
-						return [{
-							fieldName: 'id'
-						}, {
-							fieldName: 'scene_group_id'
-						}, {
-							fieldName: 'category'
-						}, {
-							fieldName: 'scene_group_name'
-						}, {
-							fieldName: 'scene_group_desc'
-						}, {
-							fieldName: 'auth',
-							dataType: 'boolean'
-						}]
-					}
-				},
+        /**
+         * Grid Model
+         * *******
+         */
+        gridModel: {
+          type: Array,
+          value: function () {
+            return [
+              {
+                fieldName: "id",
+              },
+              {
+                fieldName: "scene_group_id",
+              },
+              {
+                fieldName: "category",
+              },
+              {
+                fieldName: "scene_group_name",
+              },
+              {
+                fieldName: "scene_group_desc",
+              },
+              {
+                fieldName: "auth",
+                dataType: "boolean",
+              },
+            ];
+          },
+        },
 
-				/**
-				 * Grid Columns
-				 * *******
-				 */
-				gridColumns: {
-					type: Array,
-					value: function() {
-						return [{
-							fieldName: 'id',
-							width: 0
-						}, {
-							fieldName: 'scene_group_id',
-							width: 0
-						}, {
-							fieldName: 'category',
-							width: 0
-						},{
-							fieldName: 'scene_group_name',
-							name: 'scene_group_name',
-							width: 150,
-							editable: false,
-							header: {
-								text: Things.DataGlobal.t('label.group')
-							}
-						},{
-							fieldName: 'scene_group_desc',
-							name: 'scene_group_desc',
-							width: 150,
-							editable: false,
-							header: {
-								text: Things.DataGlobal.t('label.description')
-							}
-						}, {
-							fieldName: 'auth',
-							name: 'auth',
-							width: 80,
-							editable: false,
-							header: {
-								text: Things.DataGlobal.t('label.auth')
-							},
-							renderer: {
-								type: "check",
-								editable: true,
-								threeStates: false
-							},
-							nullable: true
-						}]
-					}
-				},
+        /**
+         * Grid Columns
+         * *******
+         */
+        gridColumns: {
+          type: Array,
+          value: function () {
+            return [
+              {
+                fieldName: "id",
+                width: 0,
+              },
+              {
+                fieldName: "scene_group_id",
+                width: 0,
+              },
+              {
+                fieldName: "category",
+                width: 0,
+              },
+              {
+                fieldName: "scene_group_name",
+                name: "scene_group_name",
+                width: 150,
+                editable: false,
+                header: {
+                  text: Things.DataGlobal.t("label.group"),
+                },
+              },
+              {
+                fieldName: "scene_group_desc",
+                name: "scene_group_desc",
+                width: 150,
+                editable: false,
+                header: {
+                  text: Things.DataGlobal.t("label.description"),
+                },
+              },
+              {
+                fieldName: "auth",
+                name: "auth",
+                width: 80,
+                editable: false,
+                header: {
+                  text: Things.DataGlobal.t("label.auth"),
+                },
+                renderer: {
+                  type: "check",
+                  editable: true,
+                  threeStates: false,
+                },
+                nullable: true,
+              },
+            ];
+          },
+        },
 
-				/**
-				 * scene, play group 리스트
-				 * *******
-				 */
-				groupList: {
-					type: Array,
-					observer: 'groupListChanged'
-				},
+        /**
+         * scene, play group 리스트
+         * *******
+         */
+        groupList: {
+          type: Array,
+          observer: "groupListChanged",
+        },
 
-				/**
-				 * scene group의 리스트
-				 * *******
-				 */
-				sceneGroups: {
-					type: Array,
-					value: []
-				},
+        /**
+         * scene group의 리스트
+         * *******
+         */
+        sceneGroups: {
+          type: Array,
+          value: [],
+        },
 
-				/**
-				 * play group의 리스트
-				 * ******
-				 */
-				playGroups: {
-					type: Array,
-					value: []
-				},
+        /**
+         * play group의 리스트
+         * ******
+         */
+        playGroups: {
+          type: Array,
+          value: [],
+        },
 
-				/**
-				 * scene group button setup
-				 * *******
-				 */
-				sceneGroupButton: {
-					type: Array,
-					value: function() {
-						return [{
-							id: 'scene-check-btn', text: 'check'
-						}, {
-							id: 'save-btn', text: 'save'
-						}]
-					}
-				},
+        /**
+         * scene group button setup
+         * *******
+         */
+        sceneGroupButton: {
+          type: Array,
+          value: function () {
+            return [
+              {
+                id: "scene-check-btn",
+                text: "check",
+              },
+              {
+                id: "save-btn",
+                text: "save",
+              },
+            ];
+          },
+        },
 
-				/**
-				 * play group button setup
-				 * *******
-				 */
-				playGroupButton: {
-					type: Array,
-					value: function() {
-						return [{
-							id: 'play-check-btn', text: 'check'
-						}, {
-							id: 'save-btn', text: 'save'
-						}]
-					}
-				},
+        /**
+         * play group button setup
+         * *******
+         */
+        playGroupButton: {
+          type: Array,
+          value: function () {
+            return [
+              {
+                id: "play-check-btn",
+                text: "check",
+              },
+              {
+                id: "save-btn",
+                text: "save",
+              },
+            ];
+          },
+        },
 
-				/**
-				 * check all 버튼 클릭시 적용될 값
-				 * *******
-				 */
-				checkVal: {
-					type: Boolean,
-					value: true
-				}
-			},
+        /**
+         * check all 버튼 클릭시 적용될 값
+         * *******
+         */
+        checkVal: {
+          type: Boolean,
+          value: true,
+        },
+      },
 
-			listeners: {
-				'scene-check-btn-tap': 'checkAllBtnTapped',
-				'play-check-btn-tap': 'checkAllBtnTapped',
-				'scene-group-grid.things-grid-handle-save': 'groupSaveHandeler',
-				'play-group-grid.things-grid-handle-save': 'groupSaveHandeler',
-				'scene-group-ajax.things-ajax-response': 'saveAjaxResponsed'
-			},
+      listeners: {
+        "scene-check-btn-tap": "checkAllBtnTapped",
+        "play-check-btn-tap": "checkAllBtnTapped",
+        "scene-group-grid.things-grid-handle-save": "groupSaveHandeler",
+        "play-group-grid.things-grid-handle-save": "groupSaveHandeler",
+        "scene-group-ajax.things-ajax-response": "saveAjaxResponsed",
+      },
 
-			/**
-			 * user_scene_group의 호출에 대한 response가 도착하면
-			 * sceneGroups와 playGroups를 초기화하여 각기 그리드에 출력
-			 * *******
-			 * @param {Array} groupList
-			 */
-			groupListChanged: function(groupList) {
-				var sceneGroups = [];
-				var playGroups = [];
-				groupList.forEach(function(group) {
-					if(group.category == 'SCENE') {
-						sceneGroups.push(group);
-					} else if (group.category == 'PLAY') {
-						playGroups.push(group);
-					}
-				});
+      /**
+       * user_scene_group의 호출에 대한 response가 도착하면
+       * sceneGroups와 playGroups를 초기화하여 각기 그리드에 출력
+       * *******
+       * @param {Array} groupList
+       */
+      groupListChanged: function (groupList) {
+        var sceneGroups = [];
+        var playGroups = [];
+        groupList.forEach(function (group) {
+          if (group.category == "SCENE") {
+            sceneGroups.push(group);
+          } else if (group.category == "PLAY") {
+            playGroups.push(group);
+          }
+        });
 
-				this.sceneGroups = sceneGroups;
-				this.playGroups = playGroups;
-			},
+        this.sceneGroups = sceneGroups;
+        this.playGroups = playGroups;
+      },
 
-			/**
-			 * 변경된 그룹 정보를 저장하기 위한 handeler
-			 * *******
-			 * @param {Object} event
-			 */
-			groupSaveHandeler: function(event) {
-				event.preventDefault();
-				var writeData = event.target.writeData;
-				var tempArray = [];
+      /**
+       * 변경된 그룹 정보를 저장하기 위한 handeler
+       * *******
+       * @param {Object} event
+       */
+      groupSaveHandeler: function (event) {
+        event.preventDefault();
+        var writeData = event.target.writeData;
+        var tempArray = [];
 
-				writeData.forEach(function(data) {
-					if(this.checkDataChanged(data)) {
-						if(data.auth === true) {
-							var tempObj = {
-								account_id: this.resourceId,
-								group_type: data.category,
-								scene_group_id: data.scene_group_id,
-								cud_flag_: 'c'
-							};
+        writeData.forEach(
+          function (data) {
+            if (this.checkDataChanged(data)) {
+              if (data.auth === true) {
+                var tempObj = {
+                  account_id: this.resourceId,
+                  group_type: data.category,
+                  scene_group_id: data.scene_group_id,
+                  cud_flag_: "c",
+                };
 
-							tempArray.push(tempObj);
-						} else if (data.auth === false) {
-							var tempObj = {
-								id: data.id,
-								cud_flag_: 'd'
-							};
+                tempArray.push(tempObj);
+              } else if (data.auth === false) {
+                var tempObj = {
+                  id: data.id,
+                  cud_flag_: "d",
+                };
 
-							tempArray.push(tempObj);
-						}
-					}
-				}.bind(this));
+                tempArray.push(tempObj);
+              }
+            }
+          }.bind(this)
+        );
 
-				/**
-				 * 변경된 데이터가 있으면 ajax 호출 없을시 메시지 출력
-				 * ********
-				 */
-				if(tempArray.length > 0) {
-					var sceneGroupSaveAjax = this.$['scene-group-ajax'];
-					sceneGroupSaveAjax.body = tempArray;
-					sceneGroupSaveAjax.generateRequest();
-				} else {
-					this.openInfoMsg({
-						type : 'info',
-						title : Things.DataGlobal.t('title.info'),
-						text : Things.DataGlobal.t('text.NOTHING_CHANGED')
-					});
-				}
-			},
+        /**
+         * 변경된 데이터가 있으면 ajax 호출 없을시 메시지 출력
+         * ********
+         */
+        if (tempArray.length > 0) {
+          var sceneGroupSaveAjax = this.$["scene-group-ajax"];
+          sceneGroupSaveAjax.body = tempArray;
+          sceneGroupSaveAjax.generateRequest();
+        } else {
+          this.openInfoMsg({
+            type: "info",
+            title: Things.DataGlobal.t("title.info"),
+            text: Things.DataGlobal.t("text.NOTHING_CHANGED"),
+          });
+        }
+      },
 
-			/**
-			 * 데이터가 변경되었는지 확인함
-			 * *********
-			 * @param {Object} data
-			 */
-			checkDataChanged: function(data) {
-				var result = true;
-				this.groupList.forEach(function(item) {
-					if(item.scene_group_id == data.scene_group_id) {
-						if(item.auth == true && data.auth === true) {
-							result = false;
-						} else if (item.auth == false && data.auth === false) {
-							result = false;
-						}
-					}
-				});
+      /**
+       * 데이터가 변경되었는지 확인함
+       * *********
+       * @param {Object} data
+       */
+      checkDataChanged: function (data) {
+        var result = true;
+        this.groupList.forEach(function (item) {
+          if (item.scene_group_id == data.scene_group_id) {
+            if (item.auth == true && data.auth === true) {
+              result = false;
+            } else if (item.auth == false && data.auth === false) {
+              result = false;
+            }
+          }
+        });
 
-				return result;
-			},
+        return result;
+      },
 
-			/**
-			 * save ajax response시 그리드를 재구성하기 위해 ajax 호출
-			 * *******
-			 * @param {Object} event
-			 */
-			saveAjaxResponsed: function(event) {
-				this.$['user-groups-ajax'].generateRequest();
-			},
+      /**
+       * save ajax response시 그리드를 재구성하기 위해 ajax 호출
+       * *******
+       * @param {Object} event
+       */
+      saveAjaxResponsed: function (event) {
+        this.$["user-groups-ajax"].generateRequest();
+      },
 
-			/**
-			 * play check all button tapped
-			 * ********
-			 * @param {Object} event
-			 */
-			checkAllBtnTapped: function(event) {
-				var targetGrid = (event.detail.id.indexOf('scene') == 0) ? this.$['scene-group-grid'] : this.$['play-group-grid'];
-				var grid = targetGrid.getGridObject();
-				var dataSet = targetGrid.getGridDataSet();
-				var currentRows = grid.getRows();
+      /**
+       * play check all button tapped
+       * ********
+       * @param {Object} event
+       */
+      checkAllBtnTapped: function (event) {
+        var targetGrid = event.detail.id.indexOf("scene") == 0 ? this.$["scene-group-grid"] : this.$["play-group-grid"];
+        var grid = targetGrid.getGridObject();
+        var dataSet = targetGrid.getGridDataSet();
+        var currentRows = grid.getRows();
 
-				currentRows.forEach(function(row) {
-					var rowObject = row.getRowObject();
-					rowObject.auth = this.checkVal;
-          dataSet.updateRow(row.dataIndex(), rowObject, false);
-        }.bind(this));
+        currentRows.forEach(
+          function (row) {
+            var rowObject = row.getRowObject();
+            rowObject.auth = this.checkVal;
+            dataSet.updateRow(row.dataIndex(), rowObject, false);
+          }.bind(this)
+        );
 
-				this.checkVal = !this.checkVal
-				grid.refreshView();
-			}
-		})
-	</script>
+        this.checkVal = !this.checkVal;
+        grid.refreshView();
+      },
+    });
+  </script>
 </dom-module>

@@ -1,8 +1,8 @@
 {
     "name": "things-system-manager",
-    "version": "v2.2.4",
+    "version": "v2.2.5",
     "authors": [
-        "Hatio Lab. <heartyoh@hatiolab.com>"
+        "Shenzhen Weixun"
     ],
     "description": "An element providing Things Profile",
     "keywords": [
@@ -11,8 +11,6 @@
         "seed"
     ],
     "main": "things-system-manager.html",
-    "license": "http://license.hatiolab.com/EULA",
-    "homepage": "http://elements.hatiolab.com/",
     "ignore": [
         "/.*",
         "/test/"

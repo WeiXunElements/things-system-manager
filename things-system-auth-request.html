@@ -1,22 +1,22 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
 
-<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html" />
 
-<link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-button/things-button-bar.html">
-<link rel="import" href="../things-i18n-msg/things-i18n-msg.html">
-<link rel="import" href="../things-input-field/things-input-field.html">
-<link rel="import" href="../things-input-field/things-textarea.html">
-<link rel="import" href="../things-resource-combo/things-code-combo.html">
+<link rel="import" href="../things-ajax/things-ajax.html" />
+<link rel="import" href="../things-button/things-button-bar.html" />
+<link rel="import" href="../things-i18n-msg/things-i18n-msg.html" />
+<link rel="import" href="../things-input-field/things-input-field.html" />
+<link rel="import" href="../things-input-field/things-textarea.html" />
+<link rel="import" href="../things-resource-combo/things-code-combo.html" />
 
-<link rel="import" href="../things-detail/things-resource-detail-tab-view-behavior.html">
-<link rel="import" href="../things-global-behavior/things-global-behavior.html">
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
-<link rel="import" href="../things-meta/things-detail-form-meta-behavior.html">
+<link rel="import" href="../things-detail/things-resource-detail-tab-view-behavior.html" />
+<link rel="import" href="../things-global-behavior/things-global-behavior.html" />
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html" />
+<link rel="import" href="../things-meta/things-detail-form-meta-behavior.html" />
 
 <!--
 things-system-auth-request
@@ -24,315 +24,319 @@ things-system-auth-request
 -->
 
 <dom-module id="things-system-auth-request">
-    <template>
-        <style>
-            :host {
-                display: block;
-                @apply(--things-default-padding);
-                @apply(--layout-vertical);
-            }
-            paper-toolbar {
-                background-color:var(--things-white-background-color);
-                height: 60px;
-                @apply(--things-tight-padding);
-            }
-            paper-toolbar::shadow #bottomBar {
-                height: 50px;
-                @apply(--layout-horizontal);
-                @apply(--layout-end-justified);
-                padding: 0 10px;
-            }
-            .fields-container {
-                @apply(--layout-horizontal);
-            }
-        </style>
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply (--things-default-padding);
+        @apply (--layout-vertical);
+      }
+      paper-toolbar {
+        background-color: var(--things-white-background-color);
+        height: 60px;
+        @apply (--things-tight-padding);
+      }
+      paper-toolbar::shadow #bottomBar {
+        height: 50px;
+        @apply (--layout-horizontal);
+        @apply (--layout-end-justified);
+        padding: 0 10px;
+      }
+      .fields-container {
+        @apply (--layout-horizontal);
+      }
+    </style>
 
-        <things-i18n-msg msgid="label.requester" msg="{{lRequester}}" auto hidden>Requester</things-i18n-msg>
-        <things-i18n-msg msgid="label.requested_at" msg="{{lRequestedAt}}" auto hidden>Requested At</things-i18n-msg>
-        <things-i18n-msg msgid="label.role" msg="{{lRole}}" auto hidden>Role</things-i18n-msg>
-        <things-i18n-msg msgid="label.type" msg="{{lType}}" auto hidden>Type</things-i18n-msg>
-        <things-i18n-msg msgid="label.status" msg="{{lStatus}}" auto hidden>Status</things-i18n-msg>
-        <things-i18n-msg msgid="label.title" msg="{{lReason}}" auto hidden>Reason</things-i18n-msg>
-        <things-i18n-msg msgid="label.processor" msg="{{lProcessor}}" auto hidden>Processor</things-i18n-msg>
-        <things-i18n-msg msgid="label.processed_at" msg="{{lProcessedAt}}" auto hidden>Processed At</things-i18n-msg>
-        <things-i18n-msg msgid="label.opinion" msg="{{lOpinion}}" auto hidden>Opinion</things-i18n-msg>
+    <things-i18n-msg msgid="label.requester" msg="{{lRequester}}" auto hidden>Requester</things-i18n-msg>
+    <things-i18n-msg msgid="label.requested_at" msg="{{lRequestedAt}}" auto hidden>Requested At</things-i18n-msg>
+    <things-i18n-msg msgid="label.role" msg="{{lRole}}" auto hidden>Role</things-i18n-msg>
+    <things-i18n-msg msgid="label.type" msg="{{lType}}" auto hidden>Type</things-i18n-msg>
+    <things-i18n-msg msgid="label.status" msg="{{lStatus}}" auto hidden>Status</things-i18n-msg>
+    <things-i18n-msg msgid="label.title" msg="{{lReason}}" auto hidden>Reason</things-i18n-msg>
+    <things-i18n-msg msgid="label.processor" msg="{{lProcessor}}" auto hidden>Processor</things-i18n-msg>
+    <things-i18n-msg msgid="label.processed_at" msg="{{lProcessedAt}}" auto hidden>Processed At</things-i18n-msg>
+    <things-i18n-msg msgid="label.opinion" msg="{{lOpinion}}" auto hidden>Opinion</things-i18n-msg>
 
-        <things-ajax
-            auto
-            id="get-resource"
-            method="GET"
-            resource-url="request_auths/:id"
-            resource-id="[[resourceId]]"
-            last-response="{{items}}">
-        </things-ajax>
+    <things-ajax
+      auto
+      id="get-resource"
+      method="GET"
+      resource-url="request_auths/:id"
+      resource-id="[[resourceId]]"
+      last-response="{{items}}"
+    >
+    </things-ajax>
 
-        <things-ajax
-            id="process-ajax"
-            resource-id="[[resourceId]]"
-            method="PUT"
-            content-type="application/json">
-        </things-ajax>
+    <things-ajax id="process-ajax" resource-id="[[resourceId]]" method="PUT" content-type="application/json">
+    </things-ajax>
 
-        <div class="layout vertical flex">
-            <div class="fields-container">
-                <things-input-field
-                    class="flex"
-                    id="requeest-reason-field"
-                    label="[[lReason]]"
-                    value="[[items.title]]"
-                    readonly>
-                </things-input-field>
+    <div class="layout vertical flex">
+      <div class="fields-container">
+        <things-input-field
+          class="flex"
+          id="requeest-reason-field"
+          label="[[lReason]]"
+          value="[[items.title]]"
+          readonly
+        >
+        </things-input-field>
 
-                <things-code-combo
-                    class="flex"
-                    id="request-type-field"
-                    label="[[lType]]"
-                    code-name="REQUEST_AUTH_TYPE"
-                    value="[[items.request_type]]"
-                    readonly>
-                </things-code-combo>
-            </div>
+        <things-code-combo
+          class="flex"
+          id="request-type-field"
+          label="[[lType]]"
+          code-name="REQUEST_AUTH_TYPE"
+          value="[[items.request_type]]"
+          readonly
+        >
+        </things-code-combo>
+      </div>
 
-            <div class="fields-container">
-                <things-input-field
-                    class="flex"
-                    id="requester-field"
-                    label="[[lRequester]]"
-                    value="[[items.requester_email]]"
-                    readonly>
-                </things-input-field>
+      <div class="fields-container">
+        <things-input-field
+          class="flex"
+          id="requester-field"
+          label="[[lRequester]]"
+          value="[[items.requester_email]]"
+          readonly
+        >
+        </things-input-field>
 
-                <things-input-field
-                    class="flex"
-                    id="requested-at-field"
-                    label="[[lRequestedAt]]"
-                    value="[[items.created_at]]"
-                    readonly>
-                </things-input-field>
-            </div>
+        <things-input-field
+          class="flex"
+          id="requested-at-field"
+          label="[[lRequestedAt]]"
+          value="[[items.created_at]]"
+          readonly
+        >
+        </things-input-field>
+      </div>
 
-            <div class="fields-container">
-                <things-input-field
-                    class="flex"
-                    id="role-field"
-                    label="[[lRole]]"
-                    value="[[items.role.name]]"
-                    readonly>
-                </things-input-field>
+      <div class="fields-container">
+        <things-input-field class="flex" id="role-field" label="[[lRole]]" value="[[items.role.name]]" readonly>
+        </things-input-field>
 
-                <things-code-combo
-                    class="flex"
-                    id="status-field"
-                    label="[[lStatus]]"
-                    code-name="APPR_STATUS"
-                    value="[[items.status]]"
-                    readonly>
-                </things-code-combo>
-            </div>
+        <things-code-combo
+          class="flex"
+          id="status-field"
+          label="[[lStatus]]"
+          code-name="APPR_STATUS"
+          value="[[items.status]]"
+          readonly
+        >
+        </things-code-combo>
+      </div>
 
-            <div class="fields-container">
-                <things-input-field
-                    class="flex"
-                    id="processor-field"
-                    label="[[lProcessor]]"
-                    value="[[items.updater.name]]"
-                    readonly>
-                </things-input-field>
+      <div class="fields-container">
+        <things-input-field
+          class="flex"
+          id="processor-field"
+          label="[[lProcessor]]"
+          value="[[items.updater.name]]"
+          readonly
+        >
+        </things-input-field>
 
-                <things-input-field
-                    class="flex"
-                    id="processed-at-field"
-                    label="[[lProcessedAt]]"
-                    value="[[items.updated_at]]"
-                    readonly>
-                </things-input-field>
-            </div>
+        <things-input-field
+          class="flex"
+          id="processed-at-field"
+          label="[[lProcessedAt]]"
+          value="[[items.updated_at]]"
+          readonly
+        >
+        </things-input-field>
+      </div>
 
-            <things-textarea
-                class="flex"
-                id="opinion-field"
-                label="[[lOpinion]]"
-                value="[[items.opinion]]">
-            </things-textarea>
-        </div>
+      <things-textarea class="flex" id="opinion-field" label="[[lOpinion]]" value="[[items.opinion]]">
+      </things-textarea>
+    </div>
 
-        <paper-toolbar id="toolbar" justify='end'>
-            <div class="bottom">
-                <things-button-bar id="button-group" buttons="[[buttons]]" on-tap="btnTapped"></things-button-bar>
-            </div>
-        </paper-toolbar>
-    </template>
+    <paper-toolbar id="toolbar" justify="end">
+      <div class="bottom">
+        <things-button-bar id="button-group" buttons="[[buttons]]" on-tap="btnTapped"></things-button-bar>
+      </div>
+    </paper-toolbar>
+  </template>
 
-    <script>
-        Polymer({
-            is: 'things-system-auth-request',
+  <script>
+    Polymer({
+      is: "things-system-auth-request",
 
-            behaviors: [
-                Things.GlobalBehavior,
-                Things.ResourceDetailTabViewBahavior,
-                Things.DetailFormMetaBehavior,
-                Things.MsgBoxBehavior
-            ],
+      behaviors: [
+        Things.GlobalBehavior,
+        Things.ResourceDetailTabViewBahavior,
+        Things.DetailFormMetaBehavior,
+        Things.MsgBoxBehavior,
+      ],
 
-            properties: {
+      properties: {
+        /**
+         * 선택한 요청에 대한 정보
+         * *******
+         * @type {Array}
+         */
+        items: {
+          type: Array,
+          observer: "_responseChanged",
+        },
 
-                /**
-                 * 선택한 요청에 대한 정보
-                 * *******
-                 * @type {Array}
-                 */
-                items: {
-                    type: Array,
-                    observer: '_responseChanged'
+        /**
+         * 선택한 요청의 id
+         * *******
+         * @type {String}
+         */
+        requestedId: {
+          type: String,
+        },
+
+        /**
+         * buttons
+         * ******
+         * @type {Array}
+         */
+        buttons: {
+          type: Array,
+        },
+      },
+
+      /**
+       * 요청 전후의 listners
+       * ******
+       */
+      listeners: {
+        "process-ajax.things-ajax-request": "_requestProcessing",
+        "process-ajax.things-ajax-response": "_requestProcessed",
+      },
+
+      /**
+       * response의 값이 변경 되었을 때 요청한 사용자의 id를 추출하고 버튼을 구성 한다.
+       * ******
+       * @param {Object} response
+       */
+      _responseChanged: function (response) {
+        this.buttonConfig(response.status, response.request_type);
+      },
+
+      /**
+       * 권한 요청 정보의 상태와, 타입에 따라 버튼을 구성한다.
+       * *****
+       * @param {String} status
+       * @param {String} reqType
+       */
+      buttonConfig: function (status, reqType) {
+        if (status != "WAIT") {
+          this.buttons = [];
+        } else {
+          switch (reqType) {
+            case "ACCOUNT":
+              this.buttons = [
+                {
+                  id: "account-accept",
+                  text: "accept",
                 },
-
-                /**
-                 * 선택한 요청의 id
-                 * *******
-                 * @type {String}
-                 */
-                requestedId: {
-                    type: String
+                {
+                  id: "account-reject",
+                  text: "reject",
                 },
+              ];
+              break;
 
-                /**
-                 * buttons
-                 * ******
-                 * @type {Array}
-                 */
-                buttons: {
-                    type: Array
-                }
-            },
+            case "ROLE":
+              this.buttons = [
+                {
+                  id: "role-accept",
+                  text: "accept",
+                },
+                {
+                  id: "role-reject",
+                  text: "reject",
+                },
+              ];
+              break;
 
-            /**
-             * 요청 전후의 listners
-             * ******
-             */
-            listeners: {
-                'process-ajax.things-ajax-request': '_requestProcessing',
-                'process-ajax.things-ajax-response': '_requestProcessed'
-            },
+            case "PASSWORD":
+              this.buttons = [
+                {
+                  id: "password-accept",
+                  text: "accept",
+                },
+              ];
+              break;
 
-            /**
-             * response의 값이 변경 되었을 때 요청한 사용자의 id를 추출하고 버튼을 구성 한다.
-             * ******
-             * @param {Object} response
-             */
-            _responseChanged: function(response) {
-                this.buttonConfig(response.status, response.request_type);
-            },
+            case "ACTIVATION":
+              this.buttons = [
+                {
+                  id: "activation-accept",
+                  text: "accept",
+                },
+                {
+                  id: "activation-reject",
+                  text: "reject",
+                },
+              ];
+          }
+        }
+      },
 
-            /**
-             * 권한 요청 정보의 상태와, 타입에 따라 버튼을 구성한다.
-             * *****
-             * @param {String} status
-             * @param {String} reqType
-             */
-            buttonConfig: function(status, reqType) {
-                if(status != 'WAIT') {
-                    this.buttons = [];
+      /**
+       * 버튼 텝 이벤트 발생시 해당 버튼의 아이디를 통해
+       * ajax url을 초기화 한다.
+       * *******
+       * @param {Object} event
+       */
+      btnTapped: function (event) {
+        var btnId = event.model.button.id;
+        var processAjax = this.$["process-ajax"];
+        processAjax.body = { opinion: this.$["opinion-field"].value };
 
-                } else {
-                    switch (reqType) {
-                        case 'ACCOUNT':
-                            this.buttons = [{
-                                id: 'account-accept',
-                                text: 'accept'
-                            }, {
-                                id: 'account-reject',
-                                text: 'reject'
-                            }];
-                            break;
+        switch (btnId) {
+          case "account-accept":
+            processAjax.resourceUrl = "request_auths/account/register/approve/:id";
+            break;
+          case "account-reject":
+            processAjax.resourceUrl = "request_auths/account/register/reject/:id";
+            break;
+          case "role-accept":
+            processAjax.resourceUrl = "request_auths/account/auth/approve/:id";
+            break;
+          case "role-reject":
+            processAjax.resourceUrl = "request_auths/account/auth/reject/:id";
+            break;
+          case "password-accept":
+            processAjax.resourceUrl = "request_auths/password/reset/approve/:id";
+            break;
+          case "activation-accept":
+            processAjax.resourceUrl = "request_auths/account/activate/approve/:id";
+            break;
+          case "activation-reject":
+            processAjax.resourceUrl = "request_auths/account/activate/reject/:id";
+        }
 
-                        case 'ROLE':
-                            this.buttons = [{
-                                id: 'role-accept',
-                                text: 'accept'
-                            }, {
-                                id: 'role-reject',
-                                text: 'reject'
-                            }];
-                            break;
+        processAjax.generateRequest();
+      },
 
-                        case 'PASSWORD':
-                            this.buttons = [{
-                                id: 'password-accept',
-                                text: 'accept'
-                            }];
-                            break;
+      /**
+       * request가 진행되면 메시지 박스를 출력
+       */
+      _requestProcessing: function () {
+        this.openInfoMsg({
+          type: "info",
+          title: Things.DataGlobal.t("text.processing"),
+          text: Things.DataGlobal.t("text.processing_msg"),
+          showConfirmButton: false,
+        });
+      },
 
-                        case 'ACTIVATION':
-                            this.buttons = [{
-                                id: 'activation-accept',
-                                text: 'accept'
-                            }, {
-                                id: 'activation-reject',
-                                text: 'reject'
-                            }];
-                    }
-                }
-            },
-
-            /**
-             * 버튼 텝 이벤트 발생시 해당 버튼의 아이디를 통해
-             * ajax url을 초기화 한다.
-             * *******
-             * @param {Object} event
-             */
-            btnTapped: function(event) {
-                var btnId = event.model.button.id;
-                var processAjax = this.$['process-ajax'];
-                processAjax.body = { opinion: this.$['opinion-field'].value };
-
-                switch (btnId) {
-                    case 'account-accept':
-                            processAjax.resourceUrl = 'request_auths/account/register/approve/:id';
-                            break;
-                    case 'account-reject':
-                            processAjax.resourceUrl = 'request_auths/account/register/reject/:id';
-                            break;
-                    case 'role-accept':
-                            processAjax.resourceUrl = 'request_auths/account/auth/approve/:id';
-                            break;
-                    case 'role-reject':
-                            processAjax.resourceUrl = 'request_auths/account/auth/reject/:id';
-                            break;
-                    case 'password-accept':
-                            processAjax.resourceUrl = 'request_auths/password/reset/approve/:id';
-                            break;
-                    case 'activation-accept':
-                            processAjax.resourceUrl = 'request_auths/account/activate/approve/:id';
-                            break;
-                    case 'activation-reject':
-                            processAjax.resourceUrl = 'request_auths/account/activate/reject/:id';
-                }
-
-                processAjax.generateRequest();
-            },
-
-            /**
-             * request가 진행되면 메시지 박스를 출력
-             */
-            _requestProcessing: function() {
-                this.openInfoMsg({
-                    type: 'info',
-                    title: Things.DataGlobal.t('text.processing'),
-                    text: Things.DataGlobal.t('text.processing_msg'),
-                    showConfirmButton: false
-                })
-            },
-
-            /**
-             * response가 도착하면 메시지 박스를 출력
-             */
-            _requestProcessed: function() {
-                this.openInfoMsg({
-                    type: 'info',
-                    title: Things.DataGlobal.t('text.processed'),
-                    text: Things.DataGlobal.t('text.processed_msg')
-                })
-            }
-        })
-    </script>
+      /**
+       * response가 도착하면 메시지 박스를 출력
+       */
+      _requestProcessed: function () {
+        this.openInfoMsg({
+          type: "info",
+          title: Things.DataGlobal.t("text.processed"),
+          text: Things.DataGlobal.t("text.processed_msg"),
+        });
+      },
+    });
+  </script>
 </dom-module>

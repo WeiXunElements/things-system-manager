@@ -1,11 +1,11 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-form/things-search-form.html">
-<link rel="import" href="../things-grid/things-resource-grid.html">
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../things-ajax/things-ajax.html" />
+<link rel="import" href="../things-form/things-search-form.html" />
+<link rel="import" href="../things-grid/things-resource-grid.html" />
 
 <!--
 ## things-system-user
@@ -13,163 +13,159 @@ Copyright © HatioLab Inc. All rights reserved.
 	사용자 관리
 -->
 <dom-module id="things-system-user">
-    <template>
-		<style>
-			:host {
-				display: block;
-				@apply(--layout-vertical);
-				@apply(--layout-flex);
-			}
-			things-resource-grid {
-				@apply(--layout-flex);
-			}
-		</style>
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply (--layout-vertical);
+        @apply (--layout-flex);
+      }
+      things-resource-grid {
+        @apply (--layout-flex);
+      }
+    </style>
 
-		<things-ajax
-			auto
-			id="resource-meta"
-			method="GET"
-			resource-url="[[menuMetaUrl]]"
-			last-response="{{metaData}}">
-		</things-ajax>
+    <things-ajax auto id="resource-meta" method="GET" resource-url="[[menuMetaUrl]]" last-response="{{metaData}}">
+    </things-ajax>
 
-		<things-search-form
-			id="search-form"
-			title="[[menuInfo.title]]"
-			form-fields="[[searchFormFields]]"
-			select-fields="[[selectFields]]"
-			sort-fields="[[sortFields]]"
-			action-url="[[menuInfo.resource_url]]"
-			page="{{page}}"
-			limit="{{limit}}"
-			last-response="{{lastResponse}}">
-		</things-search-form>
+    <things-search-form
+      id="search-form"
+      title="[[menuInfo.title]]"
+      form-fields="[[searchFormFields]]"
+      select-fields="[[selectFields]]"
+      sort-fields="[[sortFields]]"
+      action-url="[[menuInfo.resource_url]]"
+      page="{{page}}"
+      limit="{{limit}}"
+      last-response="{{lastResponse}}"
+    >
+    </things-search-form>
 
-		<things-resource-grid
-			id="grid"
-			config="[[gridConfig]]"
-			model="[[gridModel]]"
-			columns="[[gridColumns]]"
-			data="[[items]]"
-			total-count="[[itemCount]]"
-			current-page="{{page}}"
-			limit="{{limit}}"
-			fixed-column-count="[[menuInfo.fixed_columns]]"
-			grid-save-action="[[menuInfo.grid_save_url]]"
-			buttons="[[custButtons]]">
-		</things-resource-grid>
-	</template>
+    <things-resource-grid
+      id="grid"
+      config="[[gridConfig]]"
+      model="[[gridModel]]"
+      columns="[[gridColumns]]"
+      data="[[items]]"
+      total-count="[[itemCount]]"
+      current-page="{{page}}"
+      limit="{{limit}}"
+      fixed-column-count="[[menuInfo.fixed_columns]]"
+      grid-save-action="[[menuInfo.grid_save_url]]"
+      buttons="[[custButtons]]"
+    >
+    </things-resource-grid>
+  </template>
 
-    <script>
-        Polymer({
-            is: 'things-system-user',
+  <script>
+    Polymer({
+      is: "things-system-user",
 
-            behaviors: [
-                Things.ResourceMenuContentBehavior
-            ],
+      behaviors: [Things.ResourceMenuContentBehavior],
 
-            listeners: {
-                'grid.things-grid-handle-addrow': 'onAddUser',
-                'grid.things-grid-configured': '_gridConfigured',
+      listeners: {
+        "grid.things-grid-handle-addrow": "onAddUser",
+        "grid.things-grid-configured": "_gridConfigured",
 
-                // button event
-                'reset-pwd-btn-tap': 'onResetPwdBtnTapped'
-            },
+        // button event
+        "reset-pwd-btn-tap": "onResetPwdBtnTapped",
+      },
 
-            properties: {
-                buttons: {
-                    type: Array,
-                    observer: 'onButtonsChanged'
-                },
-                custButtons: Array
-            },
+      properties: {
+        buttons: {
+          type: Array,
+          observer: "onButtonsChanged",
+        },
+        custButtons: Array,
+      },
 
-            onButtonsChanged: function(buttons) {
-                const visibleResetBtn = this.globals.user && this.globals.user.super_user;
-                if (!visibleResetBtn) {
-                    for (let i in buttons) {
-                        if (buttons[i].id === 'reset-pwd-btn') {
-                            buttons.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-                this.custButtons = buttons;
-            },
-
-            /**
-             * 그리드 구성 완료 이벤트 리스너
-             * 사용자 화면에서는 메뉴의 메타 데이터를 통해 추가 (사용자 생성) 화면을 구성한다.
-             * 메뉴 메타의 데이터가 있어도 디테일 팝업이 나타나지 않도록 그리드 구성 이후
-             * Detail이라는 명칭의 컬럼을 제거함
-             * @param {event}
-             */
-            _gridConfigured: function(event) {
-                const grid = event.detail;
-                let columns = grid.columns();
-
-                for (let i in columns) {
-                    if (columns[i].name() === 'Detail')
-                        columns.splice(i, 1);
-                }
-                grid.setColumns(columns);
-            },
-
-            /**
-             * 추가 버튼 클릭시
-             * *******
-             * @param {event} event add button 이벤트
-             */
-            onAddUser: function(event) {
-                event.preventDefault();
-                var detailScreenId = this.menuInfo.detail_form_id ?
-                    this.menuInfo.detail_form_id : 'things-system-user-add';
-                var view = document.createElement(detailScreenId);
-                view.title = Things.DataGlobal.t('button.add');
-
-                var closeCallback = function() {
-                    this.refreshData();
-                }.bind(this);
-
-                this.fire('things-open-custom-size-dialog', {
-                    view: view,
-                    modal: true,
-                    dialogSize: 'medium',
-                    closeCallback: closeCallback
-                });
-            },
-
-            onResetPwdBtnTapped: function(event) {
-                this.openConfirmMsg({
-                    title: Things.DataGlobal.t('title.confirm'),
-                    text: Things.DataGlobal.t('text.Common_sure_to_reset_password'),
-                    showCancelButton: true
-                }, () => {
-                    this._doResetPassword();
-                });
-            },
-
-            _doResetPassword: function() {
-                const grid = this.$.grid;
-                grid.grid.commit();
-        
-                const checkedRows = grid.getGridObject().getCheckedRows();
-                if (checkedRows.length === 0) return null;
-
-                const checkedUserList = checkedRows.map(item => item.getRowObject());
-
-                let ajaxResetPwd = document.createElement('things-ajax');
-                this.listen(ajaxResetPwd, 'things-ajax-response', '_doSearch');
-
-                ajaxResetPwd.resourceUrl = 'users/reset/password';
-                ajaxResetPwd.resourceAction = 'update_multiple';
-                ajaxResetPwd.body = checkedUserList;
-                ajaxResetPwd.generateRequest();
-            },
-
-            _doSearch: function() {
-                this.$['search-form'].submitMyForm();
+      onButtonsChanged: function (buttons) {
+        const visibleResetBtn = this.globals.user && this.globals.user.super_user;
+        if (!visibleResetBtn) {
+          for (let i in buttons) {
+            if (buttons[i].id === "reset-pwd-btn") {
+              buttons.splice(i, 1);
+              break;
             }
+          }
+        }
+        this.custButtons = buttons;
+      },
+
+      /**
+       * 그리드 구성 완료 이벤트 리스너
+       * 사용자 화면에서는 메뉴의 메타 데이터를 통해 추가 (사용자 생성) 화면을 구성한다.
+       * 메뉴 메타의 데이터가 있어도 디테일 팝업이 나타나지 않도록 그리드 구성 이후
+       * Detail이라는 명칭의 컬럼을 제거함
+       * @param {event}
+       */
+      _gridConfigured: function (event) {
+        const grid = event.detail;
+        let columns = grid.columns();
+
+        for (let i in columns) {
+          if (columns[i].name() === "Detail") columns.splice(i, 1);
+        }
+        grid.setColumns(columns);
+      },
+
+      /**
+       * 추가 버튼 클릭시
+       * *******
+       * @param {event} event add button 이벤트
+       */
+      onAddUser: function (event) {
+        event.preventDefault();
+        var detailScreenId = this.menuInfo.detail_form_id ? this.menuInfo.detail_form_id : "things-system-user-add";
+        var view = document.createElement(detailScreenId);
+        view.title = Things.DataGlobal.t("button.add");
+
+        var closeCallback = function () {
+          this.refreshData();
+        }.bind(this);
+
+        this.fire("things-open-custom-size-dialog", {
+          view: view,
+          modal: true,
+          dialogSize: "medium",
+          closeCallback: closeCallback,
         });
-    </script>
+      },
+
+      onResetPwdBtnTapped: function (event) {
+        this.openConfirmMsg(
+          {
+            title: Things.DataGlobal.t("title.confirm"),
+            text: Things.DataGlobal.t("text.Common_sure_to_reset_password"),
+            showCancelButton: true,
+          },
+          () => {
+            this._doResetPassword();
+          }
+        );
+      },
+
+      _doResetPassword: function () {
+        const grid = this.$.grid;
+        grid.grid.commit();
+
+        const checkedRows = grid.getGridObject().getCheckedRows();
+        if (checkedRows.length === 0) return null;
+
+        const checkedUserList = checkedRows.map((item) => item.getRowObject());
+
+        let ajaxResetPwd = document.createElement("things-ajax");
+        this.listen(ajaxResetPwd, "things-ajax-response", "_doSearch");
+
+        ajaxResetPwd.resourceUrl = "users/reset/password";
+        ajaxResetPwd.resourceAction = "update_multiple";
+        ajaxResetPwd.body = checkedUserList;
+        ajaxResetPwd.generateRequest();
+      },
+
+      _doSearch: function () {
+        this.$["search-form"].submitMyForm();
+      },
+    });
+  </script>
 </dom-module>

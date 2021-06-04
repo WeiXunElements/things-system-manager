@@ -1,13 +1,13 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
 
-<link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-content/things-resource-menu-content-behavior.html">
-<link rel="import" href="../things-form/things-search-form.html">
-<link rel="import" href="../things-grid/things-resource-grid.html">
+<link rel="import" href="../things-ajax/things-ajax.html" />
+<link rel="import" href="../things-content/things-resource-menu-content-behavior.html" />
+<link rel="import" href="../things-form/things-search-form.html" />
+<link rel="import" href="../things-grid/things-resource-grid.html" />
 
 <!--
 ## things-system-data-src
@@ -16,197 +16,196 @@ Copyright © HatioLab Inc. All rights reserved.
 -->
 
 <dom-module id="things-system-data-src">
-	<template>
-		<style>
-			:host {
-				display: block;
-				@apply(--layout-vertical);
-				@apply(--layout-flex);
-			}
+  <template>
+    <style>
+      :host {
+        display: block;
+        @apply (--layout-vertical);
+        @apply (--layout-flex);
+      }
 
-			things-resource-grid {
-				@apply(--layout-flex);
-			}
-		</style>
+      things-resource-grid {
+        @apply (--layout-flex);
+      }
+    </style>
 
-		<things-ajax
-			auto
-			id="resource-meta"
-			method="GET"
-			resource-url="[[menuMetaUrl]]"
-			last-response="{{metaData}}">
-		</things-ajax>
+    <things-ajax auto id="resource-meta" method="GET" resource-url="[[menuMetaUrl]]" last-response="{{metaData}}">
+    </things-ajax>
 
-		<things-ajax
-			id="connect-datasource"
-			method="POST"
-			content-type="application/json"
-			resource-url="data_srcs/:id/init_pool">
-		</things-ajax>
+    <things-ajax
+      id="connect-datasource"
+      method="POST"
+      content-type="application/json"
+      resource-url="data_srcs/:id/init_pool"
+    >
+    </things-ajax>
 
-		<things-ajax
-			id="close-datasource"
-			method="POST"
-			content-type="application/json"
-			resource-url="data_srcs/:id/destroy_pool">
-		</things-ajax>
+    <things-ajax
+      id="close-datasource"
+      method="POST"
+      content-type="application/json"
+      resource-url="data_srcs/:id/destroy_pool"
+    >
+    </things-ajax>
 
-		<things-search-form
-			id="search-form"
-			title="[[menuInfo.title]]"
-			form-fields="[[searchFormFields]]"
-			select-fields="[[selectFields]]"
-			sort-fields="[[sortFields]]"
-			action-url="[[menuInfo.resource_url]]"
-			page="{{page}}"
-			limit="[[limit]]"
-			last-response="{{lastResponse}}">
-		</things-search-form>
+    <things-search-form
+      id="search-form"
+      title="[[menuInfo.title]]"
+      form-fields="[[searchFormFields]]"
+      select-fields="[[selectFields]]"
+      sort-fields="[[sortFields]]"
+      action-url="[[menuInfo.resource_url]]"
+      page="{{page}}"
+      limit="[[limit]]"
+      last-response="{{lastResponse}}"
+    >
+    </things-search-form>
 
-		<things-resource-grid
-			id="grid"
-			config="[[gridConfig]]"
-			model="[[gridModel]]"
-			columns="[[gridColumns]]"
-			data="[[items]]"
-			total-count="[[itemCount]]"
-			current-page="{{page}}"
-			limit="[[limit]]"
-			fixed-column-count="[[menuInfo.fixed_columns]]"
-			grid-save-action="[[menuInfo.grid_save_url]]"
-			export-file-name="[[menuInfo.title]]"
-			export-sheet-name="[[menuInfo.title]]"
-			delete-record-validation="[[deleteRecordValidation]]"
-			buttons="[[buttons]]">
-		</things-resource-grid>
-	</template>
+    <things-resource-grid
+      id="grid"
+      config="[[gridConfig]]"
+      model="[[gridModel]]"
+      columns="[[gridColumns]]"
+      data="[[items]]"
+      total-count="[[itemCount]]"
+      current-page="{{page}}"
+      limit="[[limit]]"
+      fixed-column-count="[[menuInfo.fixed_columns]]"
+      grid-save-action="[[menuInfo.grid_save_url]]"
+      export-file-name="[[menuInfo.title]]"
+      export-sheet-name="[[menuInfo.title]]"
+      delete-record-validation="[[deleteRecordValidation]]"
+      buttons="[[buttons]]"
+    >
+    </things-resource-grid>
+  </template>
 
-	<script>
-		Polymer({
-			is: 'things-system-data-src',
+  <script>
+    Polymer({
+      is: "things-system-data-src",
 
-			behaviors: [
-				Things.ResourceMenuContentBehavior
-			],
+      behaviors: [Things.ResourceMenuContentBehavior],
 
-			properties: {
-				/**
-				 * 삭제해서는 안되는 조건 체크
-				 * *******
-				 * @type {Object}
-				 */
-				deleteRecordValidation: {
-					type: Object,
-					value: function() {
-						return { fieldName : 'status', operator : 'eq', fieldValue : 'CONNECTED' };
-					}
-				}
-			},
+      properties: {
+        /**
+         * 삭제해서는 안되는 조건 체크
+         * *******
+         * @type {Object}
+         */
+        deleteRecordValidation: {
+          type: Object,
+          value: function () {
+            return { fieldName: "status", operator: "eq", fieldValue: "CONNECTED" };
+          },
+        },
+      },
 
-			listeners : {
-				'grid.things-grid-configure': '_onBeforeGridConfigure',
-				'grid.things-grid-column-dblclicked' : '_gridDoubleClicked',
-				'connect-datasource.things-ajax-response': 'refreshGridData',
-				'close-datasource.things-ajax-response': 'refreshGridData'
-			},
+      listeners: {
+        "grid.things-grid-configure": "_onBeforeGridConfigure",
+        "grid.things-grid-column-dblclicked": "_gridDoubleClicked",
+        "connect-datasource.things-ajax-response": "refreshGridData",
+        "close-datasource.things-ajax-response": "refreshGridData",
+      },
 
-			/**
-			 * 그리드 컬럼 메타 정보가 변경된 이후 ...
-			 * ********
-			 *
-			 * @param {Object} event
-			 */
-			_onBeforeGridConfigure: function(event) {
-				// 연결 / 연결 해제 ...
-				var actionColumn = {
-					fieldName: '_action_button_',
-					name: '_action_button_',
-					width: 30,
-					editable: false,
-					imageList: 'images',
-					header: { text: ' ' },
-					renderer: { type: 'icon' },
-					styles: { iconIndex: 'media_play.png', iconLocation: 'center' },
-					styleCallback: function(index, styles) {
-						var row = index.getRow();
-						var data = row.getRowObject();
-						var status = data.status;
+      /**
+       * 그리드 컬럼 메타 정보가 변경된 이후 ...
+       * ********
+       *
+       * @param {Object} event
+       */
+      _onBeforeGridConfigure: function (event) {
+        // 연결 / 연결 해제 ...
+        var actionColumn = {
+          fieldName: "_action_button_",
+          name: "_action_button_",
+          width: 30,
+          editable: false,
+          imageList: "images",
+          header: { text: " " },
+          renderer: { type: "icon" },
+          styles: { iconIndex: "media_play.png", iconLocation: "center" },
+          styleCallback: function (index, styles) {
+            var row = index.getRow();
+            var data = row.getRowObject();
+            var status = data.status;
 
-						if(status == 'CONNECTED') {
-							styles.setIconIndex('media_stop.png');
-						} else {
-							styles.setIconIndex('media_play.png');
-						}
-					}
-				};
+            if (status == "CONNECTED") {
+              styles.setIconIndex("media_stop.png");
+            } else {
+              styles.setIconIndex("media_play.png");
+            }
+          },
+        };
 
-				var gridColumns = event.detail.columns;
-				gridColumns.unshift(actionColumn);
-			},
+        var gridColumns = event.detail.columns;
+        gridColumns.unshift(actionColumn);
+      },
 
-			/**
-			 * Grid Double Click 후
-			 *
-			 * @param {Objec} event
-			 */
-			_gridDoubleClicked: function(event) {
-				var index = event.detail.index;
-				var grid = event.detail.grid;
-				var row = grid.focusedRow();
-				var data = row.getRowObject();
-				var status = data.status;
+      /**
+       * Grid Double Click 후
+       *
+       * @param {Objec} event
+       */
+      _gridDoubleClicked: function (event) {
+        var index = event.detail.index;
+        var grid = event.detail.grid;
+        var row = grid.focusedRow();
+        var data = row.getRowObject();
+        var status = data.status;
 
-				// 첫번쩨 컬럼 아이콘에 대한 로직
-				if(index.column.name() == '_action_button_') {
-					if(status == 'CONNECTED') {
-						this.closeDatasource(data);
-					} else {
-						this.connectDatasource(data);
-					}
-				}
-			},
+        // 첫번쩨 컬럼 아이콘에 대한 로직
+        if (index.column.name() == "_action_button_") {
+          if (status == "CONNECTED") {
+            this.closeDatasource(data);
+          } else {
+            this.connectDatasource(data);
+          }
+        }
+      },
 
-			/**
-			 * Connect Datasource
-			 ********
-			 * @param {Object} data
-			 */
-			connectDatasource: function(data) {
-				var title = Things.DataGlobal.t('button.connect');
-				this.invokeAjax('connect-datasource', title, data);
-			},
+      /**
+       * Connect Datasource
+       ********
+       * @param {Object} data
+       */
+      connectDatasource: function (data) {
+        var title = Things.DataGlobal.t("button.connect");
+        this.invokeAjax("connect-datasource", title, data);
+      },
 
-			/**
-			 * Disconnect Datasource
-			 *********
-			 * @param {Object} data
-			 */
-			closeDatasource: function(data) {
-				var title = Things.DataGlobal.t('button.disconnect');
-				this.invokeAjax('close-datasource', title, data);
-			},
+      /**
+       * Disconnect Datasource
+       *********
+       * @param {Object} data
+       */
+      closeDatasource: function (data) {
+        var title = Things.DataGlobal.t("button.disconnect");
+        this.invokeAjax("close-datasource", title, data);
+      },
 
-			/**
-			 * Invoke Ajax
-			 ********
-			 * @param {String} ajaxId
-			 * @param {String} title
-			 * @param {Object} record
-			 */
-			invokeAjax: function(ajaxId, title, record) {
-				var ajax = this.$[ajaxId];
+      /**
+       * Invoke Ajax
+       ********
+       * @param {String} ajaxId
+       * @param {String} title
+       * @param {Object} record
+       */
+      invokeAjax: function (ajaxId, title, record) {
+        var ajax = this.$[ajaxId];
 
- 				this.openConfirmMsg({
-					type : 'info',
-					title : title,
-					text : Things.DataGlobal.t('text.Sure to X', { x : title }),
-					showCancelButton : true
-
-				}, function() {
-					ajax.resourceId = record.id;
-					ajax.generateRequest();
-				});
-			}
-		});
-	</script>
+        this.openConfirmMsg(
+          {
+            type: "info",
+            title: title,
+            text: Things.DataGlobal.t("text.Sure to X", { x: title }),
+            showCancelButton: true,
+          },
+          function () {
+            ajax.resourceId = record.id;
+            ajax.generateRequest();
+          }
+        );
+      },
+    });
+  </script>
 </dom-module>
